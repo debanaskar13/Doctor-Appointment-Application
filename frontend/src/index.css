@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+
+*{
+    @apply scroll-smooth
+}
+
+::-webkit-scrollbar{
+    @apply hidden
+}
+
+.bg-primary{
+    background-color: #5F6FFF;
+}
+
+.active hr{
+    @apply block
+}
+
+.grid-cols-auto{
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
