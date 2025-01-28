@@ -1,8 +1,9 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import {Home,About,Contact,Doctors,Login,MyAppointment,MyProfile,Appointment} from "./pages"
+import { Home, About, Contact, Doctors, Login, MyAppointment, MyProfile, Appointment } from "./pages"
 import Navbar from './components/Navbar'
+import Footer from './components/Footer'
 
 const App = () => {
   return (
@@ -19,7 +20,7 @@ const App = () => {
         <Route path='/my-profile' element={<MyProfile />} />
         <Route path='/appointment/:docId' element={<Appointment />} />
       </Routes>
-
+      <Footer />
     </div>
   )
 }
