@@ -48,7 +48,7 @@ const Doctors = () => {
             {
               specialityList.map((special,index) => (
                 
-                <p key={index} onClick={() => speciality === special ? navigate("/doctors") : navigate(`/doctors/${special}`)} className='w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer'>{special}</p>
+                <p key={index} onClick={() => speciality === special ? navigate("/doctors") : navigate(`/doctors/${special}`)} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer ${ speciality === special ? "active-list" : "" }`}>{special}</p>
               ))
             }
 

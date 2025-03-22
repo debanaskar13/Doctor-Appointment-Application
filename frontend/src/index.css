@@ -26,3 +26,7 @@
 .menu-block{
     display: block;
 }
+
+.active-list{
+    background-color: rgb(217, 223, 224);
+}
