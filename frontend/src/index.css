@@ -38,3 +38,9 @@
 .active-list{
     background-color: rgb(217, 223, 224);
 }
+
+@media (max-width: 740px){
+    .active p{
+        @apply text-white bg-[#5F6FFF]
+    }
+}
