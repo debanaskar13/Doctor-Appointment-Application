@@ -4,6 +4,8 @@ package site.debashisnaskar.rxflow.service;
 import org.mindrot.jbcrypt.BCrypt;
 import site.debashisnaskar.rxflow.dto.LoginRequest;
 import site.debashisnaskar.rxflow.dto.RegisterRequest;
+import site.debashisnaskar.rxflow.model.User;
+import site.debashisnaskar.rxflow.repository.UserRepository;
 import site.debashisnaskar.rxflow.utils.DB;
 import site.debashisnaskar.rxflow.utils.JwtUtil;
 
@@ -15,22 +17,25 @@ import java.sql.SQLException;
 
 public class AuthService {
 
-    public AuthService(){}
+    private static final UserRepository userRepository = new UserRepository();
 
-    public void register(RegisterRequest registerRequest , String defaultImageUrl) throws IOException, SQLException, ClassNotFoundException {
+    public void register(RegisterRequest registerRequest , String defaultImageUrl) throws IOException, ClassNotFoundException {
 
-        Connection conn = DB.getConnection();
-        String hashPassword = BCrypt.hashpw(registerRequest.getPassword(), BCrypt.gensalt());
+        try{
+            Connection conn = DB.getConnection();
+            String hashPassword = BCrypt.hashpw(registerRequest.getPassword(), BCrypt.gensalt());
 
+            User user = User.builder()
+                    .username(registerRequest.getUsername())
+                    .password(hashPassword)
+                    .name(registerRequest.getUsername())
+                    .image(defaultImageUrl)
+                    .build();
 
-        PreparedStatement stmt = conn.prepareStatement("INSERT INTO users (username,password,name,image) VALUES (?,?,?,?)");
-        stmt.setString(1, registerRequest.getUsername());
-        stmt.setString(2, hashPassword);
-        stmt.setString(3, registerRequest.getName());
-        stmt.setString(4,defaultImageUrl);
-
-//        Insert User details
-        stmt.executeUpdate();
+            userRepository.save(user);
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 
     public String login(LoginRequest loginRequest) throws SQLException, ClassNotFoundException {

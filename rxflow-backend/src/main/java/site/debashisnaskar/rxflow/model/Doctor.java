@@ -20,5 +20,5 @@ public class Doctor {
     private String about;
     private boolean available;
     private Double fees;
-    private Map<String,Object> slotsBooked;
+    private Slot slotsBooked;
 }

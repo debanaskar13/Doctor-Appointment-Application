@@ -51,6 +51,7 @@ public class JwtFilter implements Filter {
                         user = User.builder()
                                 .id(rs.getInt("id"))
                                 .username(rs.getString("username"))
+                                .role(rs.getString("role"))
                                 .phone(rs.getString("phone"))
                                 .email(rs.getString("email"))
                                 .name(rs.getString("name"))

@@ -37,7 +37,7 @@ public class RegisterServlet extends HttpServlet {
 
             resp.setStatus(HttpServletResponse.SC_CREATED);
             writer.print("{\"status\":\"success\",\"message\":\"User successfully registered\"}");
-        }catch (SQLException | ClassNotFoundException e) {
+        }catch (ClassNotFoundException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             writer.print("{\"status\":\"error\",\"message\":\"" + e.getMessage() + "\"}");
         }catch (Exception e) {

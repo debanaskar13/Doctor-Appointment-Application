@@ -1,5 +1,6 @@
 
-select * from doctors d join users u on d.user_id = u.id;
+
+select * from users;
 
 -- CREATE TABLE users(
 --     id int not null primary key auto_increment,
