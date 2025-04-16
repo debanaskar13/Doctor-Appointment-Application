@@ -1,5 +1,6 @@
 package site.debashisnaskar.rxflow.utils;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -14,9 +15,11 @@ import java.util.function.Function;
 
 public class JwtUtil {
 
-    public static final String SECRET = "5367566859703373367639792F423F452848284D6251655468576D5A71347437";
+    private static final Dotenv dotenv = Dotenv.load();
+
+    public static final String SECRET = dotenv.get("JWT_SECRET");
     private static final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
-    private static final long EXPIRATION = 1000 * 60 * 60 * 24;
+    private static final long EXPIRATION = 1000 * 60 * 60 * Long.parseLong(dotenv.get("JWT_EXPIRY","1"));
 
 
     public static String generateToken(String username) {
@@ -60,7 +63,7 @@ public class JwtUtil {
 
     public static boolean validateToken(String token, User user) {
         String username = extractUsername(token);
-        return username.equals(user.getUsername()) && isTokenExpired(token);
+        return username.equals(user.getUsername()) && !isTokenExpired(token);
     }
 
 }

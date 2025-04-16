@@ -23,5 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 target/
+*.env
 
 prescripto_assets/

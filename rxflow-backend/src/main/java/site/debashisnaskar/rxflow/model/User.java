@@ -15,4 +15,9 @@ public class User {
     private String email;
     private String phone;
     private String name;
+    private String role;
+    private String image;
+    private String gender;
+    private String dob;
+    private Address address;
 }

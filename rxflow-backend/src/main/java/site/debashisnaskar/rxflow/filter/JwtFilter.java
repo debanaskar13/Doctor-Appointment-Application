@@ -26,8 +26,8 @@ public class JwtFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         String path = request.getRequestURI();
 
-        if(path.equals("/login") || path.equals("/logout") || path.equals("/register")) {
-            filterChain.doFilter(request, response);
+        if(path.contains("/login") || path.contains("/logout") || path.contains("/register")) {
+            filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
 

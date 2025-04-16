@@ -23,6 +23,9 @@ public class RegisterServlet extends HttpServlet {
         AuthService authService = Utils.getAuthServiceInstance();
         resp.setContentType("application/json");
 
+        String contextPath = req.getContextPath();
+        String defaultImageUrl = contextPath + "/images/default.png";
+
         String requestBody = Utils.readJsonBody(req);
 
         Gson gson = new Gson();
@@ -30,7 +33,7 @@ public class RegisterServlet extends HttpServlet {
         PrintWriter writer = resp.getWriter();
 
         try{
-            authService.register(registerRequest);
+            authService.register(registerRequest,defaultImageUrl);
 
             resp.setStatus(HttpServletResponse.SC_CREATED);
             writer.print("{\"status\":\"success\",\"message\":\"User successfully registered\"}");
