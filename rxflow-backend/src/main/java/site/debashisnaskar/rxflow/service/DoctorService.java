@@ -32,7 +32,7 @@ public class DoctorService {
         return doctorRepository.delete(doctorId);
     }
 
-    public void updateDoctor(Doctor doctor) {
+    public void updateDoctor(Doctor doctor) throws SQLException, ClassNotFoundException, DoctorNotFoundException {
 
     }
 
@@ -50,5 +50,10 @@ public class DoctorService {
             throw new DoctorNotFoundException("doctor not found");
         }
         return doctor;
+    }
+
+    public boolean uploadImage(String imageUrl, int doctorId) throws SQLException, DoctorNotFoundException, ClassNotFoundException {
+        Doctor doctor = getDoctor(doctorId);
+        return userRepository.updateImage(imageUrl,doctor.getUser().getId());
     }
 }

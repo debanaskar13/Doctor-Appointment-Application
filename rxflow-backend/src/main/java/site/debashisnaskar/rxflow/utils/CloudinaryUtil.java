@@ -11,7 +11,7 @@ public class CloudinaryUtil {
 
     static {
         cloudinary = new Cloudinary(ObjectUtils.asMap(
-                "could_name", dotenv.get("CLOUDINARY_CLOUD_NAME"),
+                "cloud_name", dotenv.get("CLOUDINARY_CLOUD_NAME"),
                 "api_key",dotenv.get("CLOUDINARY_API_KEY"),
                 "api_secret",dotenv.get("CLOUDINARY_SECRET_KEY")
         ));

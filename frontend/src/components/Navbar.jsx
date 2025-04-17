@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { assets } from "../assets/assets"
 import { NavLink, useNavigate } from 'react-router-dom'
 
@@ -7,12 +7,17 @@ const Navbar = () => {
 
     const navigate = useNavigate()
     const [showMenu,setShowMenu] = useState(false)
-    const [token,setToken] = useState(true)
+    const [token,setToken] = useState(false)
 
     const logout = () => {
-        navigate('/')
         setToken(false)
+        localStorage.removeItem('token')
+        navigate('/')
     }
+
+    useEffect(() => {
+        setToken(localStorage.getItem('token') ? true : false)
+    },[token])
 
 
     return (

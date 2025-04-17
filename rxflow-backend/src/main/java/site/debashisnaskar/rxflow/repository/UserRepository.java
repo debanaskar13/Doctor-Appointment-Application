@@ -89,4 +89,13 @@ public class UserRepository {
                 .build();
     }
 
+    public boolean updateImage(String imageUrl, int userId) throws SQLException {
+
+        PreparedStatement stmt = connection.prepareStatement("UPDATE users SET image = ? WHERE id = ?");
+        stmt.setString(1, imageUrl);
+        stmt.setInt(2, userId);
+
+        int i = stmt.executeUpdate();
+        return i > 0;
+    }
 }

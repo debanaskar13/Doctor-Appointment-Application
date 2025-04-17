@@ -1,5 +1,4 @@
 
-
 select * from users;
 
 -- CREATE TABLE users(

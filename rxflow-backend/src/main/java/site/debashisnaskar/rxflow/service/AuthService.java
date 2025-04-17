@@ -28,7 +28,7 @@ public class AuthService {
             User user = User.builder()
                     .username(registerRequest.getUsername())
                     .password(hashPassword)
-                    .name(registerRequest.getUsername())
+                    .name(registerRequest.getName())
                     .image(defaultImageUrl)
                     .build();
 
