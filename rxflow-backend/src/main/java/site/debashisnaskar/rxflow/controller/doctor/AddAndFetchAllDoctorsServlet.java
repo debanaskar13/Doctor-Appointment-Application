@@ -3,10 +3,12 @@ package site.debashisnaskar.rxflow.controller.doctor;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 import site.debashisnaskar.rxflow.exception.UserNotFoundException;
 import site.debashisnaskar.rxflow.model.Doctor;
 import site.debashisnaskar.rxflow.model.User;
@@ -19,6 +21,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @WebServlet("/doctors")
+@MultipartConfig
 public class AddAndFetchAllDoctorsServlet extends HttpServlet {
 
     private static final DoctorService doctorService = new DoctorService();
@@ -37,11 +40,10 @@ public class AddAndFetchAllDoctorsServlet extends HttpServlet {
             List<Doctor> allDoctors = doctorService.getAllDoctors();
 
             String responseJson = gson.toJson(allDoctors);
-            resp.getWriter().write(responseJson);
+            resp.getWriter().write("{\"success\":true,\"doctors\":"+responseJson+"}");
             logger.info("Fetching all doctors by user : " + user.getUsername());
         }catch (Exception e) {
-            resp.setStatus(500);
-            resp.getWriter().write("{\"error\":\"" + e.getMessage() + "\"}");
+            Utils.buildJsonResponse(e.getMessage(),false,resp,HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             logger.severe("Error fetching all doctors by user : " + user.getUsername() + "error : " + e.getMessage());
         }
     }
@@ -54,44 +56,43 @@ public class AddAndFetchAllDoctorsServlet extends HttpServlet {
             return;
         }
         User user = (User) req.getAttribute("user");
-        String requestBody = null;
+
+        String contextPath = req.getContextPath();
+        String defaultImageUrl = contextPath + "/images/default.png";
+        Part filePart = req.getPart("image");
+        String requestBody = req.getParameter("doctorData");
+
         try {
-            requestBody = Utils.readJsonBody(req);
 
             Gson gson = Utils.getGsonInstance();
             Doctor doctor = gson.fromJson(requestBody, Doctor.class);
-            doctorService.addDoctor(doctor);
-            resp.setStatus(HttpServletResponse.SC_CREATED);
-            resp.getWriter().write("{\"success\": true,\"message\": \"Doctor added successfully\"}");
+            doctorService.addDoctor(doctor,filePart,defaultImageUrl);
+            Utils.buildJsonResponse("Doctor added successfully",true,resp,HttpServletResponse.SC_CREATED);
             logger.info("Doctor added successfully by user : " + user.getUsername());
         }catch (UserNotFoundException e){
-            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            resp.getWriter().write("{\"success\": false,\"message\": \"User not found\"}");
+            Utils.buildJsonResponse("User not found",false,resp,HttpServletResponse.SC_NOT_FOUND);
             logger.severe("User not found, user : " + user.getUsername());
         }catch (IOException | JsonSyntaxException e) {
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            resp.getWriter().println("{\"success\": false , \"message\": \"" + e.getMessage() + "\"");
+            Utils.buildJsonResponse(e.getMessage(),false,resp,HttpServletResponse.SC_BAD_REQUEST);
             logger.severe("Error creating doctor "+ requestBody + " by user : " + user.getUsername() + " error : " + e.getMessage());
         }catch (SQLIntegrityConstraintViolationException e){
-            resp.setStatus(HttpServletResponse.SC_CONFLICT);
-            resp.getWriter().write("{\"success\": false, \"message\": \"doctor with the same user id is already available\"}\"");
+            Utils.buildJsonResponse("doctor with the same user id is already available",false,resp,HttpServletResponse.SC_CONFLICT);
             logger.severe("Error creating doctor "+ requestBody + " by user : " + user.getUsername() + " error : " + e.getMessage());
         }catch (Exception e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            resp.getWriter().println("{\"success\": false , \"message\": \"" + e.getMessage() + "\"");
+            Utils.buildJsonResponse(e.getMessage(),false,resp,HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             logger.severe("Error creating doctor "+ requestBody + " by user : " + user.getUsername() + " error : " + e.getMessage());
         }
 
     }
 
-    private boolean isAuthorized(HttpServletRequest req, HttpServletResponse resp) {
+    private boolean isAuthorized(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         User user = (User) req.getAttribute("user");
         if (user == null) {
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            Utils.buildJsonResponse("Please login to access this page",false,resp,HttpServletResponse.SC_UNAUTHORIZED);
             return false;
         }
         if(!user.getRole().equals("ROLE_ADMIN")) {
-            resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            Utils.buildJsonResponse("You don't have access to this page",false,resp,HttpServletResponse.SC_FORBIDDEN);
             return false;
         }
         return true;

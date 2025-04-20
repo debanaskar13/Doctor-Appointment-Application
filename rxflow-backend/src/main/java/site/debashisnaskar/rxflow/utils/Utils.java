@@ -2,11 +2,12 @@ package site.debashisnaskar.rxflow.utils;
 
 import com.google.gson.Gson;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
+import site.debashisnaskar.rxflow.dto.ErrorResponse;
 import site.debashisnaskar.rxflow.service.AuthService;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,6 +50,28 @@ public class Utils {
         }
 
         return pathVariable;
+    }
+
+    public static void buildJsonResponse(String message, boolean success, HttpServletResponse resp, int status) throws IOException {
+        PrintWriter writer = resp.getWriter();
+        ErrorResponse errorResponse = ErrorResponse.builder().success(success).message(message).build();
+        resp.setStatus(status);
+        writer.write(getGsonInstance().toJson(errorResponse));
+        writer.flush();
+        writer.close();
+    }
+
+    public static File convertPartToFile(Part part) throws IOException {
+        File tempFile = File.createTempFile("upload-", part.getSubmittedFileName());
+        try (InputStream input = part.getInputStream();
+             FileOutputStream output = new FileOutputStream(tempFile)) {
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = input.read(buffer)) != -1) {
+                output.write(buffer, 0, bytesRead);
+            }
+        }
+        return tempFile;
     }
 
 }

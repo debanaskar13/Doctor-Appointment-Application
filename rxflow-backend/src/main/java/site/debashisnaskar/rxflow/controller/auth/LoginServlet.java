@@ -5,13 +5,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import site.debashisnaskar.rxflow.utils.Utils;
 import site.debashisnaskar.rxflow.dto.LoginRequest;
+import site.debashisnaskar.rxflow.dto.LoginResponse;
 import site.debashisnaskar.rxflow.service.AuthService;
+import site.debashisnaskar.rxflow.utils.Utils;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.logging.Logger;
 
@@ -30,26 +30,27 @@ public class LoginServlet extends HttpServlet {
         Gson gson = Utils.getGsonInstance();
         LoginRequest loginRequest = gson.fromJson(requestBody, LoginRequest.class);
         PrintWriter writer = resp.getWriter();
+        String jsonResponse = "";
 
         try{
 
-            String token = authService.login(loginRequest);
+            LoginResponse loginResponse = authService.login(loginRequest);
+            jsonResponse= gson.toJson(loginResponse);
 
-            if(token != null) {
-                writer.print("{\"success\": true,\"token\":\"" + token + "\"}");
+            if(loginResponse != null) {
+                writer.write(jsonResponse);
                 logger.info("User login successfully with " + loginRequest.getUsername() + " at " + LocalDateTime.now());
             }else{
-                writer.print("{\"success\": false, \"message\":\"Invalid Username or Password\"}\"}");
+                Utils.buildJsonResponse("Invalid username or password",false,resp,HttpServletResponse.SC_UNAUTHORIZED);
                 logger.severe("Invalid Username or Password --> username : " + loginRequest.getUsername() );
             }
 
-        } catch (SQLException | ClassNotFoundException e) {
-            logger.severe("Something went wrong --> username : " + loginRequest.getUsername() + " error : " + e);
-            resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid username or password");
-        }catch (Exception e) {
+        } catch (Exception e) {
+            Utils.buildJsonResponse("Something went wrong",false,resp,HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             logger.severe("Something went wrong --> username : " + loginRequest.getUsername() + " error : " + e );
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Something went wrong");
+        } finally {
+            writer.flush();
+            writer.close();
         }
-        writer.close();
     }
 }

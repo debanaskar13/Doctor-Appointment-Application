@@ -43,8 +43,7 @@ public class UpdateDeleteAndFetchDoctorServlet extends HttpServlet {
                 user = (User) req.getAttribute("user");
 
                 if(doctor == null) {
-                    resp.setStatus(404);
-                    resp.getWriter().write("{\"success\": false, \"message\": \"doctor id " + doctorId + " not found\"}");
+                    Utils.buildJsonResponse("doctor id " + doctorId + " not found",false,resp,HttpServletResponse.SC_NOT_FOUND);
                     logger.severe("Error getting doctor id : " + doctorId + " by user : " + user.getUsername());
                     return;
                 }
@@ -53,21 +52,14 @@ public class UpdateDeleteAndFetchDoctorServlet extends HttpServlet {
                 resp.getWriter().write(responseJson);
 
             }catch (DoctorNotFoundException e) {
-                resp.setStatus(404);
-                resp.getWriter().write("{\"success\": false, \"message\": \"doctor not found\"}");
-                logger.severe("Error getting doctor id : " + doctorId + " by user : " + user.getUsername());
+                Utils.buildJsonResponse("doctor not found",false,resp,HttpServletResponse.SC_NOT_FOUND);
+                logger.severe("Error getting doctor id : " + doctorId + " by user : " + user);
             }catch(NumberFormatException e) {
-                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                resp.getWriter().write("{\"success\": false, \"message\": \"invalid doctor id\"}");
-                logger.severe("Error getting doctor id : " + doctorId + " by user : " + user.getUsername());
-            } catch (SQLException | ClassNotFoundException e) {
-                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                resp.getWriter().write("{\"success\": false, \"message\": \"something wrong on server\"}");
-                logger.severe("Error getting doctor id : " + doctorId + " by user : " + user.getUsername() + " error : " + e.getMessage());
+                Utils.buildJsonResponse("invalid doctor id",false,resp,HttpServletResponse.SC_CONFLICT);
+                logger.severe("Error getting doctor id : " + doctorId + " by user : " + user);
             } catch (Exception e) {
-                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                resp.getWriter().write("{\"success\": false, \"message\": \"something went wrong\"}");
-                logger.severe("Error getting doctor id : " + doctorId + " by user : " + user.getUsername() + " error : " + e.getMessage());
+                Utils.buildJsonResponse("something wrong on server",false,resp,HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                logger.severe("Error getting doctor id : " + doctorId + " by user : " + user + " error : " + e.getMessage());
             }
         }
 
@@ -94,17 +86,15 @@ public class UpdateDeleteAndFetchDoctorServlet extends HttpServlet {
 
 //                Update Doctor here
                 doctorService.updateDoctor(doctorRequested);
-                resp.getWriter().write("{\"success\": true , \"message\": \"doctor updated successfully\"}");
+                Utils.buildJsonResponse("doctor updated successfully",true,resp,HttpServletResponse.SC_OK);
                 logger.info("doctor updated successfully with doctor id : " + doctorId + " by user : " + user.getUsername());
 
             } catch (DoctorNotFoundException e) {
-                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                resp.getWriter().write("{\"success\": false, \"message\": \"doctor not found\"}");
-                logger.severe("Error getting doctor id : " + doctorId + " by user : " + user.getUsername());
+                Utils.buildJsonResponse("doctor not found",false,resp,HttpServletResponse.SC_NOT_FOUND);
+                logger.severe("Error getting doctor id : " + doctorId + " by user : " + user);
             } catch (SQLException | ClassNotFoundException e) {
-                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                resp.getWriter().write("{\"success\": false, \"message\": \"something went wrong\"}");
-                logger.severe("Error updating doctor with id : " + doctorId + " by user : " + user.getUsername() + " error : " + e.getMessage());
+                Utils.buildJsonResponse("something went wrong",false,resp,HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                logger.severe("Error updating doctor with id : " + doctorId + " by user : " + user + " error : " + e.getMessage());
             }
         }
 
@@ -129,26 +119,22 @@ public class UpdateDeleteAndFetchDoctorServlet extends HttpServlet {
 
                 boolean isDocDeleted = doctorService.deleteDoctor(Integer.parseInt(doctorId));
                 if(isDocDeleted) {
-                    resp.setStatus(200);
-                    resp.getWriter().write("{\"success\": true, \"message\": \" " + doctorId + " deleted successfully\"}");
+                    Utils.buildJsonResponse("doctor deleted successfully",true,resp,HttpServletResponse.SC_OK);
                     logger.info("Doctor deleted successfully with doctor id : " + doctorId + " by user : " + user.getUsername());
                     return;
                 }
-                resp.setStatus(404);
-                resp.getWriter().write("{\"success\": false, \"message\": \"" + doctorId + "not found\"}");
+
+                Utils.buildJsonResponse("doctor with id " + doctorId + " not found",false,resp,HttpServletResponse.SC_NOT_FOUND);
                 logger.severe("Error deleting doctor id : " + doctorId + " by user : " + user.getUsername());
-            } catch (SQLException | ClassNotFoundException e) {
-                resp.setStatus(404);
-                resp.getWriter().write("{\"success\": false, \"message\": \"something went wrong\"}");
-                logger.severe("Error deleting doctor id : " + doctorId + " by user : " + user.getUsername() + " error : " + e.getMessage());
-            }catch (NumberFormatException e){
-                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                resp.getWriter().write("{\"success\": false, \"message\":\"invalid doctor id\"}");
-                logger.severe("Error deleting doctor id : " + doctorId + " by user : " + user.getUsername() + " error : " + e.getMessage());
+            } catch (NumberFormatException e){
+                Utils.buildJsonResponse("invalid doctor id",false,resp,HttpServletResponse.SC_BAD_REQUEST);
+                logger.severe("Error deleting doctor id : " + doctorId + " by user : " + user + " error : " + e.getMessage());
             } catch (DoctorNotFoundException e) {
-                resp.setStatus(404);
-                resp.getWriter().write("{\"success\": false, \"message\": \"" + doctorId + " not found\"}");
-                logger.severe("Error deleting doctor id : " + doctorId + " by user : " + user.getUsername() + " error : " + e.getMessage());
+                Utils.buildJsonResponse("doctor with id " + doctorId + " not found",false,resp,HttpServletResponse.SC_NOT_FOUND);
+                logger.severe("Error deleting doctor id : " + doctorId + " by user : " + user + " error : " + e.getMessage());
+            } catch (Exception e){
+                Utils.buildJsonResponse("something went wrong",false,resp,HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                logger.severe("Error deleting doctor id : " + doctorId + " by user : " + user + " error : " + e.getMessage());
             }
         }
     }

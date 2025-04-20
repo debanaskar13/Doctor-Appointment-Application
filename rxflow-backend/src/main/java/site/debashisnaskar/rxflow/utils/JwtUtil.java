@@ -19,12 +19,13 @@ public class JwtUtil {
 
     public static final String SECRET = dotenv.get("JWT_SECRET");
     private static final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
-    private static final long EXPIRATION = 1000 * 60 * 60 * Long.parseLong(dotenv.get("JWT_EXPIRY","1"));
+    private static final long EXPIRATION = 1000 * 60 * Long.parseLong(dotenv.get("JWT_EXPIRY","1"));
 
 
-    public static String generateToken(String username) {
+    public static String generateToken(User user) {
         HashMap<String, Object> claims = new HashMap<>();
-        return createToken(claims,username);
+        claims.put("role", user.getRole());
+        return createToken(claims,user.getUsername());
     }
     public static String createToken(Map<String,Object> claims, String username) {
         return Jwts.builder()

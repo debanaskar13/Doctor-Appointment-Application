@@ -27,7 +27,7 @@ class ApiService{
         return await api.get(`/users/${userId}`)
     }
 
-    static async myDoctorProfile(doctorId){
+    static async getDoctor(doctorId){
         return await api.get(`/doctors/${doctorId}`)
     }
 

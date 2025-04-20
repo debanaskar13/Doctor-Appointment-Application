@@ -1,12 +1,15 @@
-
-select * from users;
-
+-- use rxflow;
+-- select *
+-- from users;
+-- UPDATE users
+-- set role = 'ROLE_ADMIN'
+-- where id = 1;
 -- CREATE TABLE users(
 --     id int not null primary key auto_increment,
 --     username varchar(100) not null unique,
 --     password varchar(255) not null,
 --     email varchar(255),
---     phone varchar(15) not null default '0000000000',
+--     phone varchar(30) not null default '000000000000000',
 --     name varchar(255) not null,
 --     role varchar(20) not null default 'ROLE_USER',
 --     image varchar(255) not null,
@@ -14,7 +17,6 @@ select * from users;
 --     address json not null default (JSON_OBJECT('line1', '', 'line2', '')),
 --     dob varchar(20) not null default 'Not Selected'
 -- );
-
 -- CREATE TABLE doctors(
 --     id int not null primary key auto_increment,
 --     user_id int not null,

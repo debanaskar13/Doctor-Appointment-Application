@@ -6,10 +6,7 @@ import site.debashisnaskar.rxflow.model.User;
 import site.debashisnaskar.rxflow.utils.DB;
 import site.debashisnaskar.rxflow.utils.Utils;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,14 +46,27 @@ public class UserRepository {
         return null;
     }
 
-    public void save(User user) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement("INSERT INTO users(username,password,name,image) VALUES ( ?, ?, ?, ?)");
+    public int save(User user) throws SQLException {
+        PreparedStatement stmt = connection.prepareStatement("INSERT INTO users(username,password,name,image,address,phone,dob,gender) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
         stmt.setString(1, user.getUsername());
         stmt.setString(2, user.getPassword());
         stmt.setString(3, user.getName());
         stmt.setString(4, user.getImage());
+        stmt.setString(5, gson.toJson(user.getAddress()));
+        stmt.setString(6, user.getPhone());
+        stmt.setString(7, user.getDob());
+        stmt.setString(8, user.getGender());
 
-        stmt.executeUpdate();
+        int rowsEffected = stmt.executeUpdate();
+
+        if(rowsEffected > 0) {
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            if(generatedKeys.next()) {
+                return generatedKeys.getInt(1);
+            }
+        }
+
+        return -1;
     }
 
     public void update(User user) throws SQLException {

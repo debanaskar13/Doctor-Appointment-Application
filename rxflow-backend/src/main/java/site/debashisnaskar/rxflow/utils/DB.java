@@ -5,11 +5,13 @@ import io.github.cdimascio.dotenv.Dotenv;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
 public class DB {
 
     private static Connection conn;
     private static final Dotenv dotenv = Dotenv.load();
+    private static final Logger logger = Logger.getLogger(DB.class.getName());
 
     public static Connection getConnection() throws SQLException, ClassNotFoundException {
 
@@ -21,7 +23,11 @@ public class DB {
         Class.forName("com.mysql.cj.jdbc.Driver");
 
         if(conn == null) {
-            conn = DriverManager.getConnection(url,user, password);
+            try{
+                conn = DriverManager.getConnection(url,user, password);
+            } catch (Exception e){
+                logger.severe(e.getMessage());
+            }
         }
         return conn;
     }

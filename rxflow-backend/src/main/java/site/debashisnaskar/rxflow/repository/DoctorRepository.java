@@ -100,4 +100,13 @@ public class DoctorRepository {
                 .build();
     }
 
+    public boolean changeAvailability(int doctorId, boolean availability) throws SQLException {
+        PreparedStatement stmt = connection.prepareStatement("UPDATE doctors SET available = ? WHERE id = ?");
+        stmt.setBoolean(1, availability);
+        stmt.setInt(2, doctorId);
+
+        int i = stmt.executeUpdate();
+
+        return i > 0;
+    }
 }
