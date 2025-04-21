@@ -21,12 +21,12 @@ class ApiService {
 
     static async addDoctor(formData) {
         this.setAuthToken(localStorage.getItem('aToken'))
-        return await api.post('/doctors', formData)
+        return await api.post('/admin/doctors', formData)
     }
 
     static async fetchAllDoctors() {
         this.setAuthToken(localStorage.getItem('aToken'))
-        return await api.get('/doctors')
+        return await api.get('/admin/doctors')
     }
 
     static async changeAvailability(doctorId) {

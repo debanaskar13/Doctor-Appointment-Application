@@ -54,10 +54,8 @@ const AdminContextProvider = (props) => {
 
 
     useEffect(() => {
-
         if (token) {
             try {
-
                 const decoded = jwtDecode(token)
 
                 if (decoded.exp * 1000 > Date.now()) {
@@ -67,15 +65,11 @@ const AdminContextProvider = (props) => {
                     localStorage.removeItem('aToken')
 
                 }
-
-
             } catch (error) {
                 toast.error('Invalid token')
                 localStorage.removeItem('aToken')
             }
         }
-
-
     }, [])
 
     return (

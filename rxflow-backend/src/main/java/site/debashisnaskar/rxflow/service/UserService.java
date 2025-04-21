@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
+import site.debashisnaskar.rxflow.dto.UpdateProfileRequest;
 import site.debashisnaskar.rxflow.exception.UserNotFoundException;
 import site.debashisnaskar.rxflow.model.User;
 import site.debashisnaskar.rxflow.repository.UserRepository;
@@ -44,7 +45,7 @@ public class UserService {
         }
     }
 
-    public boolean uploadImage(Part part,int userId) throws ServletException, IOException, SQLException {
+    public boolean uploadImage(Part part,int userId) throws IOException, SQLException {
         String imageUrl = uploadToCloudinary(part);
         return userRepository.updateImage(imageUrl, userId);
     }
@@ -59,5 +60,20 @@ public class UserService {
         file.delete();
 
         return imageUrl;
+    }
+
+    public User getUserProfile(User user) throws SQLException {
+        return userRepository.getUserProfile(user.getUsername());
+    }
+
+    public boolean updateUserProfile(User user, Part imageFilePart) throws SQLException, IOException {
+
+        String imageUrl = null;
+        if(imageFilePart != null) {
+             imageUrl = uploadToCloudinary(imageFilePart);
+        }
+        user.setImage(imageUrl == null ? user.getImage() : imageUrl);
+        
+        return userRepository.updateUserProfile(user);
     }
 }

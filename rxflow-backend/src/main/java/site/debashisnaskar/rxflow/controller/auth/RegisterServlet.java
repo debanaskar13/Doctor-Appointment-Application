@@ -32,6 +32,18 @@ public class RegisterServlet extends HttpServlet {
         String requestBody = Utils.readJsonBody(req);
         RegisterRequest registerRequest = gson.fromJson(requestBody, RegisterRequest.class);
 
+        if(registerRequest.getUsername() == null || registerRequest.getPassword() == null || registerRequest.getName() == null) {
+            Utils.buildJsonResponse("Missing required fields (username , password, name)",false,resp,HttpServletResponse.SC_BAD_REQUEST);
+            logger.severe("Missing required fields (username , password, name)" + registerRequest);
+            return;
+        }
+
+        if(registerRequest.getPassword().length() < 8) {
+            Utils.buildJsonResponse("Enter a strong Password",false,resp,HttpServletResponse.SC_BAD_REQUEST);
+            logger.severe("Enter a strong Password" + registerRequest);
+            return;
+        }
+
         try{
             authService.register(registerRequest,defaultImageUrl);
 

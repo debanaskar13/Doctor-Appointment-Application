@@ -3,6 +3,7 @@ package site.debashisnaskar.rxflow.service;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Part;
 import org.mindrot.jbcrypt.BCrypt;
+import site.debashisnaskar.rxflow.dto.DoctorDto;
 import site.debashisnaskar.rxflow.exception.DoctorNotFoundException;
 import site.debashisnaskar.rxflow.exception.UserNotFoundException;
 import site.debashisnaskar.rxflow.model.Doctor;
@@ -87,4 +88,13 @@ public class DoctorService {
         Doctor doctor = getDoctor(doctorId);
         return userService.uploadImage(part,doctor.getUser().getId());
     }
+
+    public List<DoctorDto> getDoctorList() throws SQLException, ClassNotFoundException {
+
+        return doctorRepository.getDoctorList();
+
+    }
+
+
+
 }

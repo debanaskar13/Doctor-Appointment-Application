@@ -1,6 +1,7 @@
 package site.debashisnaskar.rxflow.repository;
 
 import com.google.gson.Gson;
+import site.debashisnaskar.rxflow.dto.UserDto;
 import site.debashisnaskar.rxflow.model.Address;
 import site.debashisnaskar.rxflow.model.User;
 import site.debashisnaskar.rxflow.utils.DB;
@@ -107,5 +108,37 @@ public class UserRepository {
 
         int i = stmt.executeUpdate();
         return i > 0;
+    }
+
+    public UserDto buildUserDto(ResultSet rs) throws SQLException {
+        return UserDto.builder()
+                .name(rs.getString("name"))
+                .image(rs.getString("image"))
+                .address(gson.fromJson(rs.getString("address"), Address.class))
+                .build();
+    }
+
+    public User getUserProfile(String username) throws SQLException {
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE username = ?");
+        stmt.setString(1, username);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            return buildUser(rs, rs.getInt("id"));
+        }
+        return null;
+    }
+
+    public boolean updateUserProfile(User user) throws SQLException {
+        PreparedStatement stmt = connection.prepareStatement("UPDATE users SET phone = ?, address = ?, gender = ?, dob = ?, image = ?, name = ? WHERE id = ?");
+        stmt.setString(1, user.getPhone());
+        stmt.setString(2, gson.toJson(user.getAddress()));
+        stmt.setString(3, user.getGender());
+        stmt.setString(4, user.getDob());
+        stmt.setString(5, user.getImage());
+        stmt.setString(6, user.getName());
+        stmt.setInt(7, user.getId());
+
+        int rowsEffected = stmt.executeUpdate();
+        return rowsEffected > 0;
     }
 }

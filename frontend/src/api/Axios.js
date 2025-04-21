@@ -5,30 +5,40 @@ const api = axios.create({
     baseURL: import.meta.env.VITE_BACKEND_API_URL
 });
 
-class ApiService{
+class ApiService {
 
-    static async register(requestBody){
-        return await api.post('/register', requestBody)
-    }
-
-    static async login(requestBody){
-        return await api.post('/login', requestBody)
-    }
-
-    static setAuthToken(token){
-        if(token){
+    static setAuthToken(token) {
+        if (token) {
             api.defaults.headers.common['Authorization'] = `Bearer ${token}`
-        }else{
+        } else {
             delete api.defaults.headers.common['Authorization']
         }
     }
 
-    static async myUserProfile(userId){
-        return await api.get(`/users/${userId}`)
+    static async register(requestBody) {
+        return await api.post('/register', requestBody)
     }
 
-    static async getDoctor(doctorId){
+    static async login(requestBody) {
+        return await api.post('/login', requestBody)
+    }
+
+    static async getAllDoctors() {
+        return await api.get('/doctors/list')
+    }
+
+    static async myUserProfile() {
+        this.setAuthToken(localStorage.getItem('token'))
+        return await api.get(`/user/profile`)
+    }
+
+    static async getDoctor(doctorId) {
         return await api.get(`/doctors/${doctorId}`)
+    }
+
+    static async updateProfileData(formData) {
+        this.setAuthToken(localStorage.getItem('token'))
+        return await api.put('/user/profile/update', formData)
     }
 
 }

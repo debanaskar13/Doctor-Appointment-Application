@@ -1,4 +1,4 @@
-package site.debashisnaskar.rxflow.controller.doctor;
+package site.debashisnaskar.rxflow.controller.admin;
 
 import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
@@ -17,10 +17,10 @@ import java.sql.SQLException;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-@WebServlet("/doctors/*")
+@WebServlet("/admin/doctors/*")
 public class UpdateDeleteAndFetchDoctorServlet extends HttpServlet {
 
-    private static final Pattern pattern = Pattern.compile("^/([a-zA-Z0-9]+)/?$");
+    private static final Pattern pattern = Pattern.compile("^/admin/doctors/([a-zA-Z0-9]+)/?$");
     private static final DoctorService doctorService = new DoctorService();
     private static final Gson gson = Utils.getGsonInstance();
     private  static final Logger logger = Logger.getLogger(UpdateDeleteAndFetchDoctorServlet.class.getName());

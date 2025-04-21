@@ -1,7 +1,8 @@
 package site.debashisnaskar.rxflow.repository;
 
 import com.google.gson.Gson;
-import site.debashisnaskar.rxflow.exception.DoctorNotFoundException;
+import site.debashisnaskar.rxflow.dto.DoctorDto;
+import site.debashisnaskar.rxflow.dto.UserDto;
 import site.debashisnaskar.rxflow.model.Doctor;
 import site.debashisnaskar.rxflow.model.Slot;
 import site.debashisnaskar.rxflow.model.User;
@@ -108,5 +109,37 @@ public class DoctorRepository {
         int i = stmt.executeUpdate();
 
         return i > 0;
+    }
+
+    public List<DoctorDto> getDoctorList() throws SQLException, ClassNotFoundException {
+
+        List<DoctorDto> doctors = new ArrayList<>();
+        Connection conn = DB.getConnection();
+        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM doctors d JOIN users u ON d.user_id = u.id");
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            UserDto user = userRepository.buildUserDto(rs);
+            DoctorDto doctor = buildDoctorDto(rs, user);
+            doctors.add(doctor);
+        }
+
+        return doctors;
+    }
+
+    private DoctorDto buildDoctorDto(ResultSet rs, UserDto user) throws SQLException {
+
+        return DoctorDto.builder()
+                .id(rs.getInt("d.id"))
+                .speciality(rs.getString("speciality"))
+                .degree(rs.getString("degree"))
+                .experience(rs.getString("experience"))
+                .about(rs.getString("about"))
+                .available(rs.getBoolean("available"))
+                .fees(rs.getDouble("fees"))
+                .slotsBooked(gson.fromJson(rs.getString("slots_booked"), Slot.class))
+                .user(
+                        user
+                )
+                .build();
     }
 }

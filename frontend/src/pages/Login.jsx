@@ -1,61 +1,74 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import ApiService from '../api/Axios'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { AppContext } from '../context/AppContext'
+import { toast } from 'react-toastify'
 
 const Login = () => {
 
-  const navigate = useNavigate()
-  const [state, setState] = useState("Sign Up")
+  const { token, setToken } = useContext(AppContext)
 
+  const [state, setState] = useState('Login')
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [name, setName] = useState("")
+
+  const navigate = useNavigate()
 
   const onSubmitHandler = async (event) => {
     event.preventDefault()
 
     if (state === 'Login') {
       try {
-        const res = await ApiService.login({
+        const { data } = await ApiService.login({
           username: username,
           password: password
         })
 
-        localStorage.setItem('token', res.data.token)
-        ApiService.setAuthToken(res.data.token)
-        alert('Login successfull')
-        navigate('/')
+        if (data.success) {
+          setToken(data.token)
+          localStorage.setItem('token', data.token)
+          ApiService.setAuthToken(data.token)
+          toast.success('Login successfull')
+          navigate('/')
+        } else {
+          toast.error("Login Failed")
+        }
 
       } catch (error) {
         console.log(error)
-          alert('Login Failed')
+        toast.error(error.response.data.message)
       }
 
     } else if (state === 'Sign Up') {
       try {
-        const res = await ApiService.register({
+        const { data } = await ApiService.register({
           username: username,
           password: password,
           name: name
         })
 
-        alert('Register successfull')
-        setState('Login')
+        if (data.success) {
+          toast.success('Successfully Registered . Please Login to Book Appointment')
+          setState('Login')
+        } else {
+          toast.error('Registration Failure')
+        }
 
       } catch (error) {
         console.log(error)
-          alert('Registration Failed')
+        toast.error('Registration Failed error : ' + error.response.data.message)
       }
     }
   }
 
   useEffect(() => {
-    if(localStorage.getItem('token')){
+    if (token) {
       navigate('/')
     }
-    
-  },[])
+
+  }, [navigate, token])
 
 
   return (
@@ -80,7 +93,7 @@ const Login = () => {
           <input className='border border-zinc-300 rounded-xl w-full p-2 mt-1' type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         </div>
 
-        <button className='bg-primary text-white w-full py-2 rounded-md text-base'>{state === 'Sign Up' ? 'Create Account' : 'Login'}</button>
+        <button type='submit' className='bg-primary text-white w-full py-2 rounded-md text-base'>{state === 'Sign Up' ? 'Create Account' : 'Login'}</button>
 
         {
           state === 'Sign Up'

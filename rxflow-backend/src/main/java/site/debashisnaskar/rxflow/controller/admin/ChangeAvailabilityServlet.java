@@ -1,4 +1,4 @@
-package site.debashisnaskar.rxflow.controller.doctor;
+package site.debashisnaskar.rxflow.controller.admin;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -12,7 +12,6 @@ import site.debashisnaskar.rxflow.service.DoctorService;
 import site.debashisnaskar.rxflow.utils.Utils;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.logging.Logger;
 
 @WebServlet("/doctors/change-availability")

@@ -1,11 +1,13 @@
 package site.debashisnaskar.rxflow.filter;
 
 
+import com.google.gson.Gson;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import site.debashisnaskar.rxflow.model.Address;
 import site.debashisnaskar.rxflow.model.User;
 import site.debashisnaskar.rxflow.utils.DB;
 import site.debashisnaskar.rxflow.utils.JwtUtil;
@@ -22,7 +24,7 @@ import java.util.logging.Logger;
 public class JwtFilter implements Filter {
 
     private static final Logger logger = Logger.getLogger(JwtFilter.class.getName());
-
+    private static final Gson gson = Utils.getGsonInstance();
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -31,7 +33,12 @@ public class JwtFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         String path = request.getRequestURI();
 
-        if(path.contains("/login") || path.contains("/logout") || path.contains("/register")) {
+        if(path.contains("/doctors/list") || path.contains("/login") || path.contains("/logout") || path.contains("/register")) {
+            filterChain.doFilter(servletRequest, servletResponse);
+            return;
+        }
+
+        if(path.contains("/doctors") && request.getMethod().equals("GET")) {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
@@ -61,6 +68,7 @@ public class JwtFilter implements Filter {
                                     .phone(rs.getString("phone"))
                                     .email(rs.getString("email"))
                                     .name(rs.getString("name"))
+                                    .image(rs.getString("image"))
                                     .build();
                         }
 

@@ -1,4 +1,4 @@
-package site.debashisnaskar.rxflow.controller.doctor;
+package site.debashisnaskar.rxflow.controller.admin;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -20,7 +20,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.logging.Logger;
 
-@WebServlet("/doctors")
+@WebServlet("/admin/doctors")
 @MultipartConfig
 public class AddAndFetchAllDoctorsServlet extends HttpServlet {
 
@@ -32,19 +32,19 @@ public class AddAndFetchAllDoctorsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
-        if(!isAuthorized(req,resp)){
-            return;
-        }
+//        if(!isAuthorized(req,resp)){
+//            return;
+//        }
         User user = (User) req.getAttribute("user");
         try{
             List<Doctor> allDoctors = doctorService.getAllDoctors();
 
             String responseJson = gson.toJson(allDoctors);
             resp.getWriter().write("{\"success\":true,\"doctors\":"+responseJson+"}");
-            logger.info("Fetching all doctors by user : " + user.getUsername());
+            logger.info("Fetching all doctors by user : " + (user != null ? user.getUsername() : "Guest"));
         }catch (Exception e) {
             Utils.buildJsonResponse(e.getMessage(),false,resp,HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            logger.severe("Error fetching all doctors by user : " + user.getUsername() + "error : " + e.getMessage());
+            logger.severe("Error fetching all doctors by user : " + (user != null ? user.getUsername() : "Guest") + "error : " + e.getMessage());
         }
     }
 
