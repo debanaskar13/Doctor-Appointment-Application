@@ -17,10 +17,10 @@ import java.sql.SQLException;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-@WebServlet("/admin/doctors/*")
+@WebServlet("/api/admin/doctors/*")
 public class UpdateDeleteAndFetchDoctorServlet extends HttpServlet {
 
-    private static final Pattern pattern = Pattern.compile("^/admin/doctors/([a-zA-Z0-9]+)/?$");
+    private static final Pattern pattern = Pattern.compile("^/api/admin/doctors/([a-zA-Z0-9]+)/?$");
     private static final DoctorService doctorService = new DoctorService();
     private static final Gson gson = Utils.getGsonInstance();
     private  static final Logger logger = Logger.getLogger(UpdateDeleteAndFetchDoctorServlet.class.getName());
@@ -30,8 +30,9 @@ public class UpdateDeleteAndFetchDoctorServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
 
-        String pathInfo = req.getPathInfo();
-        String doctorId = Utils.extractPathVariable(pathInfo, pattern);
+//        String pathInfo = req.getPathInfo();
+//        String doctorId = Utils.extractPathVariable(pathInfo, pattern);
+        String doctorId = req.getAttribute("doctorId").toString();
         if(doctorId != null) {
             User user = null;
             try {

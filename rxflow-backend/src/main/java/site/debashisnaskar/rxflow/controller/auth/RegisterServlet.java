@@ -26,8 +26,8 @@ public class RegisterServlet extends HttpServlet {
         AuthService authService = Utils.getAuthServiceInstance();
         resp.setContentType("application/json");
 
-        String contextPath = req.getContextPath();
-        String defaultImageUrl = contextPath + "/images/default.png";
+        String baseURL = req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() + req.getContextPath();
+        String defaultImageUrl = baseURL + "/images/default.png";
 
         String requestBody = Utils.readJsonBody(req);
         RegisterRequest registerRequest = gson.fromJson(requestBody, RegisterRequest.class);

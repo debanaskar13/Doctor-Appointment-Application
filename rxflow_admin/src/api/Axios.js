@@ -31,7 +31,7 @@ class ApiService {
 
     static async changeAvailability(doctorId) {
         this.setAuthToken(localStorage.getItem('aToken'))
-        return await api.post('/doctors/change-availability', {
+        return await api.post('/admin/doctors/change-availability', {
             doctorId: doctorId
         })
     }

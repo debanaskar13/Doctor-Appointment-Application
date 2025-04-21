@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.List;
 
 @WebServlet("/doctors/list")
-public class DoctorsServlet extends HttpServlet {
+public class ListDoctorsServlet extends HttpServlet {
     private static final DoctorService doctorService = new DoctorService();
     private static  final Gson gson = Utils.getGsonInstance();
 

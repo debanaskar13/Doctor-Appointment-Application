@@ -12,7 +12,7 @@ import site.debashisnaskar.rxflow.utils.Utils;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-@WebServlet("/users/*")
+@WebServlet("/api/admin/users/*")
 public class UpdateDeleteAndFetchUserServlet extends HttpServlet {
 
     private static final Pattern pattern = Pattern.compile("^/([a-zA-Z0-9]+)/?$");
@@ -22,9 +22,11 @@ public class UpdateDeleteAndFetchUserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         resp.setContentType("application/json");
-        String pathInfo = req.getPathInfo();
-        String userId = Utils.extractPathVariable(pathInfo, pattern);
+//        String pathInfo = req.getPathInfo();
+//        String userId = Utils.extractPathVariable(pathInfo, pattern);
+        String userId = req.getAttribute("userId").toString();
         if(userId != null) {
+
             try {
                 User user = userService.findUserById(Integer.parseInt(userId));
                 if(user == null) {

@@ -11,6 +11,7 @@ import site.debashisnaskar.rxflow.model.Address;
 @ToString
 public class UpdateProfileRequest {
     private String name;
+    private String email;
     private String phone;
     private Address address;
     private String gender;

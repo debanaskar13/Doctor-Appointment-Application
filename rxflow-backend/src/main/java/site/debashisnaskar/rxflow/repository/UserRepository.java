@@ -129,14 +129,15 @@ public class UserRepository {
     }
 
     public boolean updateUserProfile(User user) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement("UPDATE users SET phone = ?, address = ?, gender = ?, dob = ?, image = ?, name = ? WHERE id = ?");
+        PreparedStatement stmt = connection.prepareStatement("UPDATE users SET phone = ?, address = ?, gender = ?, dob = ?, image = ?, name = ?, email = ? WHERE id = ?");
         stmt.setString(1, user.getPhone());
         stmt.setString(2, gson.toJson(user.getAddress()));
         stmt.setString(3, user.getGender());
         stmt.setString(4, user.getDob());
         stmt.setString(5, user.getImage());
         stmt.setString(6, user.getName());
-        stmt.setInt(7, user.getId());
+        stmt.setString(7, user.getEmail());
+        stmt.setInt(8, user.getId());
 
         int rowsEffected = stmt.executeUpdate();
         return rowsEffected > 0;

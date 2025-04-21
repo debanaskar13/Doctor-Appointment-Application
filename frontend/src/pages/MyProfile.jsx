@@ -27,8 +27,9 @@ const MyProfile = () => {
       image && formData.append('image', image)
       formData.append('profileData', JSON.stringify({
         name: profile.name,
+        email: profile.email,
         phone: profile.phone,
-        address: {
+        address: profile.address && {
           line1: profile.address.line1,
           line2: profile.address.line2
         },
@@ -96,6 +97,12 @@ const MyProfile = () => {
           <div className='grid grid-cols-[1fr_3fr] gap-y-2.5 mt-3 text-neutral-700'>
             <p className='font-medium'>Username: </p>
             <p className='text-blue-500'>{profile.username}</p>
+            <p className='font-medium'>Email :</p>
+            {
+              isEdit
+                ? <input className='bg-gray-100 max-w-52' type="email" value={profile.email} onChange={(e) => setProfile(prev => ({ ...prev, email: e.target.value }))} />
+                : <p className='text-blue-400'>{profile.email}</p>
+            }
             <p className='font-medium'>Phone :</p>
             {
               isEdit
@@ -106,14 +113,14 @@ const MyProfile = () => {
             {
               isEdit
                 ? <p>
-                  <input className='bg-gray-50' value={profile.address.line1} onChange={e => setProfile(prev => ({ ...prev, address: { ...prev.address, line1: e.target.value } }))} type="text" />
+                  <input className='bg-gray-50' value={profile.address ? profile.address.line1 : ''} onChange={e => setProfile(prev => ({ ...prev, address: { ...prev.address, line1: e.target.value } }))} type="text" />
                   <br />
-                  <input className='bg-gray-50' value={profile.address.line2} onChange={e => setProfile(prev => ({ ...prev, address: { ...prev.address, line2: e.target.value } }))} type="text" />
+                  <input className='bg-gray-50' value={profile.address ? profile.address.line2 : ''} onChange={e => setProfile(prev => ({ ...prev, address: { ...prev.address, line2: e.target.value } }))} type="text" />
                 </p>
                 : <p className='text-gray-500'>
-                  {profile.address.line1}
+                  {profile.address ? profile.address.line1 : ''}
                   <br />
-                  {profile.address.line2}
+                  {profile.address ? profile.address.line2 : ''}
                 </p>
             }
           </div>

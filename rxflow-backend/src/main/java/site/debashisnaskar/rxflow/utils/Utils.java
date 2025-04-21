@@ -53,6 +53,7 @@ public class Utils {
     }
 
     public static void buildJsonResponse(String message, boolean success, HttpServletResponse resp, int status) throws IOException {
+        resp.setContentType("application/json");
         PrintWriter writer = resp.getWriter();
         ErrorResponse errorResponse = ErrorResponse.builder().success(success).message(message).build();
         resp.setStatus(status);

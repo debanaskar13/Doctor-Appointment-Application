@@ -20,7 +20,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.logging.Logger;
 
-@WebServlet("/admin/doctors")
+@WebServlet("/api/admin/doctors")
 @MultipartConfig
 public class AddAndFetchAllDoctorsServlet extends HttpServlet {
 
@@ -57,8 +57,8 @@ public class AddAndFetchAllDoctorsServlet extends HttpServlet {
         }
         User user = (User) req.getAttribute("user");
 
-        String contextPath = req.getContextPath();
-        String defaultImageUrl = contextPath + "/images/default.png";
+        String baseURL = req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() + req.getContextPath();
+        String defaultImageUrl = baseURL + "/images/default.png";
         Part filePart = req.getPart("image");
         String requestBody = req.getParameter("doctorData");
 

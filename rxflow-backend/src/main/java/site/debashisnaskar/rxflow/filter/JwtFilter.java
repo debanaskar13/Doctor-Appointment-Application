@@ -33,15 +33,17 @@ public class JwtFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         String path = request.getRequestURI();
 
-        if(path.contains("/doctors/list") || path.contains("/login") || path.contains("/logout") || path.contains("/register")) {
+        if(path.contains("/doctors/list") || path.contains("/login") || path.contains("/logout") || path.contains("/register") || path.contains("/images")) {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
 
-        if(path.contains("/doctors") && request.getMethod().equals("GET")) {
+
+        if(path.equals("/rxflow_backend_war_exploded/")) {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
+
 
         String authHeader = request.getHeader("Authorization");
 

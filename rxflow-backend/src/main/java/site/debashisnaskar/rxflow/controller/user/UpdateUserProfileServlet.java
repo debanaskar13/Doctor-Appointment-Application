@@ -37,6 +37,7 @@ public class UpdateUserProfileServlet extends HttpServlet {
         if(loggedInUser != null) {
             try {
                 loggedInUser.setName(updateProfileRequest.getName());
+                loggedInUser.setEmail(updateProfileRequest.getEmail());
                 loggedInUser.setPhone(updateProfileRequest.getPhone());
                 loggedInUser.setAddress(updateProfileRequest.getAddress());
                 loggedInUser.setDob(updateProfileRequest.getDob());

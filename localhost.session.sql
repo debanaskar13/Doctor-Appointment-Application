@@ -1,6 +1,9 @@
 -- use rxflow;
--- select *
--- from users;
+select *
+from users;
+-- update users
+-- set image = 'http://localhost:8081/rxflow_backend_war_exploded/images/default.png'
+-- where id = 1;
 -- UPDATE users
 -- set role = 'ROLE_ADMIN'
 -- where id = 1;
