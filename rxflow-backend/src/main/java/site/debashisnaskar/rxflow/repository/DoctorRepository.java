@@ -60,7 +60,7 @@ public class DoctorRepository {
     }
 
     public void save(Doctor doctor) throws SQLException, ClassNotFoundException {
-        PreparedStatement stmt = connection.prepareStatement("INSERT INTO doctors(user_id,speciality,degree,experience,about,available,fees,slots_booked) VALUES(?,?,?,?,?,?,?,?)");
+        PreparedStatement stmt = connection.prepareStatement("INSERT INTO doctors(user_id,speciality,degree,experience,about,available,fees,slots_booked) VALUES(?,?,?,?,?,?,?,?::jsonb)");
         stmt.setInt(1, doctor.getUser().getId());
         stmt.setString(2, doctor.getSpeciality());
         stmt.setString(3, doctor.getDegree());
@@ -87,7 +87,7 @@ public class DoctorRepository {
     private Doctor buildDoctor(ResultSet rs, User user) throws SQLException {
 
         return Doctor.builder()
-                .id(rs.getInt("d.id"))
+                .id(rs.getInt(1))
                 .speciality(rs.getString("speciality"))
                 .degree(rs.getString("degree"))
                 .experience(rs.getString("experience"))
@@ -129,7 +129,7 @@ public class DoctorRepository {
     private DoctorDto buildDoctorDto(ResultSet rs, UserDto user) throws SQLException {
 
         return DoctorDto.builder()
-                .id(rs.getInt("d.id"))
+                .id(rs.getInt(1))
                 .speciality(rs.getString("speciality"))
                 .degree(rs.getString("degree"))
                 .experience(rs.getString("experience"))
@@ -142,4 +142,6 @@ public class DoctorRepository {
                 )
                 .build();
     }
+
+
 }

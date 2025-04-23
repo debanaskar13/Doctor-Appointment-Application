@@ -31,6 +31,12 @@ public class JwtFilter implements Filter {
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
+
+        if(request.getMethod().equals("OPTIONS")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String path = request.getRequestURI();
 
         if(path.contains("/doctors/list") || path.contains("/login") || path.contains("/logout") || path.contains("/register") || path.contains("/images")) {

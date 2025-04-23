@@ -48,7 +48,7 @@ public class UserRepository {
     }
 
     public int save(User user) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement("INSERT INTO users(username,password,name,image,address,phone,dob,gender) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement stmt = connection.prepareStatement("INSERT INTO users(username,password,name,image,address,phone,dob,gender) VALUES ( ?, ?, ?, ?, ?::jsonb, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
         stmt.setString(1, user.getUsername());
         stmt.setString(2, user.getPassword());
         stmt.setString(3, user.getName());
@@ -129,7 +129,7 @@ public class UserRepository {
     }
 
     public boolean updateUserProfile(User user) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement("UPDATE users SET phone = ?, address = ?, gender = ?, dob = ?, image = ?, name = ?, email = ? WHERE id = ?");
+        PreparedStatement stmt = connection.prepareStatement("UPDATE users SET phone = ?, address = ?::jsonb, gender = ?, dob = ?, image = ?, name = ?, email = ? WHERE id = ?");
         stmt.setString(1, user.getPhone());
         stmt.setString(2, gson.toJson(user.getAddress()));
         stmt.setString(3, user.getGender());

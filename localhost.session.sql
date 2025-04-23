@@ -32,3 +32,47 @@ from users;
 --     slots_booked JSON NOT NULL,
 --     foreign key (user_id) references users(id)
 -- );
+-- CREATE TABLE IF NOT EXISTS appointments(
+--     id int not null primary key auto_increment,
+--     user_id int not null,
+--     docId int not null,
+--     slotDate varchar(50) not null,
+--     slotTime varchar(50) not null,
+--     userData JSON not null,
+--     docData JSON not null,
+--     amount float not null,
+--     date int not null,
+--     cancelled boolean default false,
+--     payment boolean default false,
+--     isCompleted boolean default false,
+--     foreign key (user_id) references users(id),
+--     foreign key (docId) references doctors(id)
+-- );
+-- ***************
+-- ***************
+-- ***********************************POSTGRESQL***********************************
+-- CREATE TABLE users(
+--     id serial not null primary key,
+--     username varchar(100) not null unique,
+--     password varchar(255) not null,
+--     email varchar(255),
+--     phone varchar(30) not null default '000000000000000',
+--     name varchar(255) not null,
+--     role varchar(20) not null default 'ROLE_USER',
+--     image varchar(255) not null,
+--     gender varchar(20) not null default 'Not Selected',
+--     address jsonb not null default '{"line1": "", "line2": ""}'::jsonb,
+--     dob varchar(20) not null default 'Not Selected'
+-- );
+-- CREATE TABLE doctors(
+--     id serial not null primary key,
+--     user_id int not null,
+--     speciality varchar(50) not null,
+--     degree varchar(50) not null,
+--     experience varchar(10) not null,
+--     about text not null,
+--     available boolean default true,
+--     fees float default 0.0,
+--     slots_booked jsonb NOT NULL,
+--     foreign key (user_id) references users(id)
+-- );

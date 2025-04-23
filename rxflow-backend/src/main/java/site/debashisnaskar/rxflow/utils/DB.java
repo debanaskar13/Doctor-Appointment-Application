@@ -16,11 +16,11 @@ public class DB {
     public static Connection getConnection() throws SQLException, ClassNotFoundException {
 
         String database = dotenv.get("DATABASE_NAME");
-        String url = dotenv.get("DATABASE_URL")+database+"?useSSL=false";
+        String url = dotenv.get("DATABASE_URL") + database;
         String user = dotenv.get("DATABASE_USERNAME");
         String password = dotenv.get("DATABASE_PASSWORD");
 
-        Class.forName("com.mysql.cj.jdbc.Driver");
+        Class.forName(dotenv.get("DATABASE_DRIVER_CLASS_NAME"));
 
         if(conn == null) {
             try{

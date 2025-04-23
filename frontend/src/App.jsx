@@ -1,18 +1,12 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import { Home, About, Contact, Doctors, Login, MyAppointment, MyProfile, Appointment } from "./pages"
-import Navbar from './components/Navbar'
-import Footer from './components/Footer'
 import { ToastContainer } from 'react-toastify'
-import { useContext } from 'react'
-import { AppContext } from './context/AppContext'
+import Footer from './components/Footer'
+import Navbar from './components/Navbar'
+import { About, Appointment, Contact, Doctors, Home, Login, MyAppointment, MyProfile } from "./pages"
 
 const App = () => {
-
-  const { token } = useContext(AppContext)
-
-
   return (
     <div className='mx-4 sm:mx-[10%]'>
       <ToastContainer />

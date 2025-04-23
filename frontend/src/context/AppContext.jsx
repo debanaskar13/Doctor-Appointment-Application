@@ -1,10 +1,11 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
 import { useState } from "react";
-import { createContext, useEffect } from "react";
+import { createContext } from "react";
 import ApiService from "../api/Axios";
 // import { doctors } from "../assets/assets";
 import { toast } from 'react-toastify'
+import { useEffect } from "react"
 import { jwtDecode } from 'jwt-decode'
 
 
@@ -48,12 +49,14 @@ const AppContextProvider = (props) => {
             }
 
         } catch (error) {
+            // console.log(error)
+            localStorage.removeItem('token')
             toast.error(error.response.data.message)
         }
     }
 
     const value = {
-        doctors, currencySymbol, token, setToken, profile, setProfile, loadUserProfile
+        doctors, currencySymbol, token, setToken, profile, setProfile, loadUserProfile, getAllDoctors
     }
 
     useEffect(() => {

@@ -16,7 +16,7 @@ import java.io.IOException;
 
 @WebServlet("/admin/*")
 @MultipartConfig
-public class AdminServlet extends HttpServlet {
+public class AdminFrontController extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

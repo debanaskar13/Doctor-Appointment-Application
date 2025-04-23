@@ -14,6 +14,7 @@ const AddDoctor = () => {
     const [email, setEmail] = useState('')
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [gender, setGender] = useState('')
     const [experience, setExperience] = useState('1 Year')
     const [fees, setFees] = useState('')
     const [about, setAbout] = useState('')
@@ -44,6 +45,7 @@ const AddDoctor = () => {
                     password,
                     name,
                     email,
+                    gender,
                     address: {
                         line1: address1,
                         line2: address2
@@ -142,6 +144,14 @@ const AddDoctor = () => {
 
                         </div>
                         <div className='w-full lg:flex-1 flex flex-col gap-4'>
+                            <div className='flex-1 flex flex-col gap-1'>
+                                <p>Gender</p>
+                                <select onChange={(e) => setGender(e.target.value)} value={gender} className='border rounded px-3 py-2 border-gray-300' name="" >
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+
                             <div className='flex-1 flex flex-col gap-1'>
                                 <p>Fees</p>
                                 <input onChange={(e) => setFees(e.target.value)} value={fees} className='border rounded px-3 py-2 border-gray-300' type="number" placeholder='Fees' required />

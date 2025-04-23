@@ -20,29 +20,24 @@ public class AuthService {
 
     private static final UserService userService = new UserService();
 
-    public int register(RegisterRequest registerRequest , String defaultImageUrl) throws IOException, ClassNotFoundException {
+    public int register(RegisterRequest registerRequest , String defaultImageUrl) throws IOException, ClassNotFoundException, SQLException {
 
-        try{
-            Connection conn = DB.getConnection();
-            String hashPassword = BCrypt.hashpw(registerRequest.getPassword(), BCrypt.gensalt());
+        String hashPassword = BCrypt.hashpw(registerRequest.getPassword(), BCrypt.gensalt());
 
-            User user = User.builder()
-                    .username(registerRequest.getUsername())
-                    .password(hashPassword)
-                    .name(registerRequest.getName())
-                    .image(defaultImageUrl)
-                    .role("ROLE_USER")
-                    .address(registerRequest.getAddress())
-                    .phone(registerRequest.getPhone() != null ? registerRequest.getPhone() : "0000000000")
-                    .dob(registerRequest.getDob() != null ? registerRequest.getDob() : "Not Selected" )
-                    .gender(registerRequest.getGender() != null ? registerRequest.getGender() : "Not Selected")
-                    .build();
+        User user = User.builder()
+                .username(registerRequest.getUsername())
+                .password(hashPassword)
+                .name(registerRequest.getName())
+                .image(defaultImageUrl)
+                .role("ROLE_USER")
+                .address(registerRequest.getAddress())
+                .phone(registerRequest.getPhone() != null ? registerRequest.getPhone() : "0000000000")
+                .dob(registerRequest.getDob() != null ? registerRequest.getDob() : "Not Selected" )
+                .gender(registerRequest.getGender() != null ? registerRequest.getGender() : "Not Selected")
+                .build();
 
-            return userService.addUser(user);
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-        return -1;
+        return userService.addUser(user);
+
     }
 
     public LoginResponse login(LoginRequest loginRequest) throws SQLException, ClassNotFoundException {

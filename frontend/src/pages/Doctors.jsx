@@ -5,12 +5,14 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AppContext } from "../context/AppContext"
 import DoctorCard from "../components/DoctorCard"
+import Loading from '../components/Loading'
 
 const Doctors = () => {
 
   const { speciality } = useParams()
   const [filterDoc, setFilterDoc] = useState([])
   const [showFilter, setShowFilter] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const navigate = useNavigate()
 
@@ -26,14 +28,13 @@ const Doctors = () => {
     setSpecialityList(Array.from(set))
   }
 
-  const applyFilter = () => {
+  const applyFilter = async () => {
 
     if (speciality) {
       setFilterDoc(doctors.filter((doctor) => doctor.speciality == speciality))
     } else {
       setFilterDoc(doctors)
     }
-
   }
 
   useEffect(() => {
@@ -45,7 +46,7 @@ const Doctors = () => {
     applyFilter()
   }, [speciality, doctors])
 
-  return (
+  return loading ? <Loading /> : (
     <div>
       <p className='text-gray-600'>Browse through the doctors specialist.</p>
       <div className='flex flex-col sm:flex-row items-start gap-5 mt-5'>
