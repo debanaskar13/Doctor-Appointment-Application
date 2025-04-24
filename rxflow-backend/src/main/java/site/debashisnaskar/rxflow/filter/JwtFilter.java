@@ -77,6 +77,9 @@ public class JwtFilter implements Filter {
                                     .email(rs.getString("email"))
                                     .name(rs.getString("name"))
                                     .image(rs.getString("image"))
+                                    .gender(rs.getString("gender"))
+                                    .dob(rs.getString("dob"))
+                                    .address(gson.fromJson(rs.getString("address"), Address.class))
                                     .build();
                         }
 

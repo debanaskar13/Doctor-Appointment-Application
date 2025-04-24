@@ -3,6 +3,7 @@ package site.debashisnaskar.rxflow.model;
 
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 @Getter
@@ -20,5 +21,5 @@ public class Doctor {
     private String about;
     private boolean available;
     private Double fees;
-    private Slot slotsBooked;
+    private Map<String, ArrayList<String>> slotsBooked;
 }

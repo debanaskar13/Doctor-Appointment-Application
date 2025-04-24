@@ -41,6 +41,16 @@ class ApiService {
         return await api.put('/user/profile/update', formData)
     }
 
+    static async bookAppointment(data) {
+        this.setAuthToken(localStorage.getItem('token'))
+        return await api.post('/user/book-appointment', data)
+    }
+
+    static async fetchMyAppointments() {
+        this.setAuthToken(localStorage.getItem('token'))
+        return await api.get('/user/my-appointments')
+    }
+
 }
 
 export default ApiService;

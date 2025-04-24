@@ -8,6 +8,8 @@ import site.debashisnaskar.rxflow.dto.RegisterRequest;
 import site.debashisnaskar.rxflow.model.User;
 import site.debashisnaskar.rxflow.repository.UserRepository;
 import site.debashisnaskar.rxflow.utils.DB;
+import site.debashisnaskar.rxflow.utils.EmailTemplateProvider;
+import site.debashisnaskar.rxflow.utils.EmailUtil;
 import site.debashisnaskar.rxflow.utils.JwtUtil;
 
 import java.io.IOException;
@@ -15,6 +17,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AuthService {
 
@@ -36,8 +40,18 @@ public class AuthService {
                 .gender(registerRequest.getGender() != null ? registerRequest.getGender() : "Not Selected")
                 .build();
 
-        return userService.addUser(user);
+        int result = userService.addUser(user);
 
+        Map<String, String> map = new HashMap<>();
+        map.put("name", user.getName());
+        map.put("username", user.getUsername());
+        map.put("role", user.getRole());
+
+        String emailBody = EmailTemplateProvider.getAdminRegisterNotificationTemplate(map);
+
+        EmailUtil.sendEmail("codewithdeba@gmail.com","New User Registration",emailBody);
+
+        return result;
     }
 
     public LoginResponse login(LoginRequest loginRequest) throws SQLException, ClassNotFoundException {

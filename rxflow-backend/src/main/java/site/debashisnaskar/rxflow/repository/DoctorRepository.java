@@ -1,6 +1,7 @@
 package site.debashisnaskar.rxflow.repository;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import site.debashisnaskar.rxflow.dto.DoctorDto;
 import site.debashisnaskar.rxflow.dto.UserDto;
 import site.debashisnaskar.rxflow.model.Doctor;
@@ -9,12 +10,14 @@ import site.debashisnaskar.rxflow.model.User;
 import site.debashisnaskar.rxflow.utils.DB;
 import site.debashisnaskar.rxflow.utils.Utils;
 
+import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class DoctorRepository {
 
@@ -68,7 +71,7 @@ public class DoctorRepository {
         stmt.setString(5, doctor.getAbout());
         stmt.setBoolean(6, doctor.isAvailable());
         stmt.setDouble(7,doctor.getFees());
-        stmt.setString(8,gson.toJson(doctor.getSlotsBooked()));
+        stmt.setString(8,"{}");
 
         stmt.executeUpdate();
 
@@ -85,7 +88,7 @@ public class DoctorRepository {
     }
 
     private Doctor buildDoctor(ResultSet rs, User user) throws SQLException {
-
+        Type type = new TypeToken<Map<String, ArrayList<String>>>(){}.getType();
         return Doctor.builder()
                 .id(rs.getInt(1))
                 .speciality(rs.getString("speciality"))
@@ -94,7 +97,7 @@ public class DoctorRepository {
                 .about(rs.getString("about"))
                 .available(rs.getBoolean("available"))
                 .fees(rs.getDouble("fees"))
-                .slotsBooked(gson.fromJson(rs.getString("slots_booked"), Slot.class))
+                .slotsBooked(gson.fromJson(rs.getString("slots_booked"), type))
                 .user(
                         user
                 )
@@ -127,7 +130,7 @@ public class DoctorRepository {
     }
 
     private DoctorDto buildDoctorDto(ResultSet rs, UserDto user) throws SQLException {
-
+        Type type = new TypeToken<Map<String, ArrayList<String>>>(){}.getType();
         return DoctorDto.builder()
                 .id(rs.getInt(1))
                 .speciality(rs.getString("speciality"))
@@ -136,7 +139,7 @@ public class DoctorRepository {
                 .about(rs.getString("about"))
                 .available(rs.getBoolean("available"))
                 .fees(rs.getDouble("fees"))
-                .slotsBooked(gson.fromJson(rs.getString("slots_booked"), Slot.class))
+                .slotsBooked(gson.fromJson(rs.getString("slots_booked"), type))
                 .user(
                         user
                 )
@@ -144,4 +147,13 @@ public class DoctorRepository {
     }
 
 
+    public boolean updateSlotBooked(int doctorId, Map<String, ArrayList<String>> slotsBooked) throws SQLException {
+        PreparedStatement stmt = connection.prepareStatement("UPDATE doctors SET slots_booked = ?::jsonb WHERE id = ?");
+        stmt.setString(1, gson.toJson(slotsBooked));
+        stmt.setInt(2, doctorId);
+
+        int i = stmt.executeUpdate();
+
+        return i > 0;
+    }
 }

@@ -36,12 +36,12 @@ public class UpdateUserProfileServlet extends HttpServlet {
 
         if(loggedInUser != null) {
             try {
-                loggedInUser.setName(updateProfileRequest.getName());
-                loggedInUser.setEmail(updateProfileRequest.getEmail());
-                loggedInUser.setPhone(updateProfileRequest.getPhone());
-                loggedInUser.setAddress(updateProfileRequest.getAddress());
-                loggedInUser.setDob(updateProfileRequest.getDob());
-                loggedInUser.setGender(updateProfileRequest.getGender());
+                loggedInUser.setName(updateProfileRequest.getName() != null ? updateProfileRequest.getName() : loggedInUser.getName());
+                loggedInUser.setEmail(updateProfileRequest.getEmail() != null ? updateProfileRequest.getEmail() : loggedInUser.getEmail());
+                loggedInUser.setPhone(updateProfileRequest.getPhone() != null ? updateProfileRequest.getPhone() : loggedInUser.getPhone());
+                loggedInUser.setAddress(updateProfileRequest.getAddress() !=null ? updateProfileRequest.getAddress() :  loggedInUser.getAddress());
+                loggedInUser.setDob(updateProfileRequest.getDob() != null ? updateProfileRequest.getDob() : loggedInUser.getDob());
+                loggedInUser.setGender(updateProfileRequest.getGender() != null ? updateProfileRequest.getGender() : loggedInUser.getGender());
 
                 boolean isUpdated = userService.updateUserProfile(loggedInUser,imageFilePart);
 

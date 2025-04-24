@@ -7,6 +7,9 @@ from users;
 -- UPDATE users
 -- set role = 'ROLE_ADMIN'
 -- where id = 1;
+-- ***************
+-- ***************
+-- *********************************** MYSQL ***********************************
 -- CREATE TABLE users(
 --     id int not null primary key auto_increment,
 --     username varchar(100) not null unique,
@@ -50,7 +53,7 @@ from users;
 -- );
 -- ***************
 -- ***************
--- ***********************************POSTGRESQL***********************************
+-- *********************************** POSTGRESQL ***********************************
 -- CREATE TABLE users(
 --     id serial not null primary key,
 --     username varchar(100) not null unique,
@@ -76,3 +79,17 @@ from users;
 --     slots_booked jsonb NOT NULL,
 --     foreign key (user_id) references users(id)
 -- );
+-- CREATE TABLE appointments(
+--     id serial not null primary key,
+--     user_id int not null,
+--     doctor_id int not null,
+--     slot_date varchar(20) not null,
+--     slot_time varchar(20) not null,
+--     amount float not null,
+--     date varchar(20) not null,
+--     cancelled boolean default false,
+--     payment boolean default false,
+--     is_completed boolean false,
+--     foreign key (user_id) references users(id),
+--     foreign key (doctor_id) references doctors(id)
+-- )

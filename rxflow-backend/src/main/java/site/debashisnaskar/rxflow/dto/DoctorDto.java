@@ -4,6 +4,9 @@ import lombok.*;
 import site.debashisnaskar.rxflow.model.Slot;
 import site.debashisnaskar.rxflow.model.User;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -20,6 +23,6 @@ public class DoctorDto {
     private String about;
     private boolean available;
     private Double fees;
-    private Slot slotsBooked;
+    private Map<String, ArrayList<String>> slotsBooked;
 
 }

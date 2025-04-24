@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @ToString
 public class Slot {
-    private String date;
-    private String startTime;
+    private String slotDate;
+    private String slotTime;
     private boolean isBooked;
 }

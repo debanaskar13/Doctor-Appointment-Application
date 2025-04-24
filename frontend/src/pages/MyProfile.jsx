@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react'
 import { AppContext } from '../context/AppContext'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Loading from '../components/Loading'
+import LoadWrapper from '../components/Loading'
 import { assets } from '../assets/assets'
 import { toast } from 'react-toastify'
 import ApiService from '../api/Axios'
@@ -68,95 +68,99 @@ const MyProfile = () => {
   }, [token])
 
 
-  return isLoading
-    ? <Loading />
-    : (profile && (
-      <div className='max-w-lg flex flex-col gap-2 text-sm'>
+  return (
+    <LoadWrapper loading={isLoading} >
+      {
+        profile && (
+          <div className='max-w-lg flex flex-col gap-2 text-sm'>
 
-        {
-          isEdit
-            ? <label htmlFor='image'>
-              <div className='inline-block relative cursor-pointer'>
-                <img className='w-36 rounded opacity-75 bg-primary' src={image ? URL.createObjectURL(image) : profile.image} alt="" />
-                <img className='w-10 absolute bottom-12 right-12 ' src={image ? '' : assets.upload_icon} alt="" />
+            {
+              isEdit
+                ? <label htmlFor='image'>
+                  <div className='inline-block relative cursor-pointer'>
+                    <img className='w-36 rounded opacity-75 bg-primary' src={image ? URL.createObjectURL(image) : profile.image} alt="" />
+                    <img className='w-10 absolute bottom-12 right-12 ' src={image ? '' : assets.upload_icon} alt="" />
+                  </div>
+                  <input onChange={(e) => setImage(e.target.files[0])} type="file" id="image" hidden />
+                </label>
+                : <img className='w-36 rounded bg-primary' src={profile.image} alt="" />
+            }
+
+            {
+              isEdit
+                ? <input className='bg-gray-50 text-3xl font-medium max-w-60 mt-4' type="text" value={profile.name} onChange={(e) => setProfile(prev => ({ ...prev, name: e.target.value }))} />
+                : <p className='font-medium text-3xl text-neutral-800 mt-4'>{profile.name}</p>
+            }
+
+            <hr className='bg-zinc-400 h-[1px] border-none' />
+            <div>
+              <p className='text-neutral-500 underline mt-3'>CONTACT INFORMATION</p>
+              <div className='grid grid-cols-[1fr_3fr] gap-y-2.5 mt-3 text-neutral-700'>
+                <p className='font-medium'>Username: </p>
+                <p className='text-blue-500'>{profile.username}</p>
+                <p className='font-medium'>Email :</p>
+                {
+                  isEdit
+                    ? <input className='bg-gray-100 max-w-52' type="email" value={profile.email} onChange={(e) => setProfile(prev => ({ ...prev, email: e.target.value }))} />
+                    : <p className='text-blue-400'>{profile.email}</p>
+                }
+                <p className='font-medium'>Phone :</p>
+                {
+                  isEdit
+                    ? <input className='bg-gray-100 max-w-52' type="text" value={profile.phone} onChange={(e) => setProfile(prev => ({ ...prev, phone: e.target.value }))} />
+                    : <p className='text-blue-400'>{profile.phone}</p>
+                }
+                <p className='font-medium'>Address :</p>
+                {
+                  isEdit
+                    ? <p>
+                      <input className='bg-gray-50' value={profile.address ? profile.address.line1 : ''} onChange={e => setProfile(prev => ({ ...prev, address: { ...prev.address, line1: e.target.value } }))} type="text" />
+                      <br />
+                      <input className='bg-gray-50' value={profile.address ? profile.address.line2 : ''} onChange={e => setProfile(prev => ({ ...prev, address: { ...prev.address, line2: e.target.value } }))} type="text" />
+                    </p>
+                    : <p className='text-gray-500'>
+                      {profile.address ? profile.address.line1 : ''}
+                      <br />
+                      {profile.address ? profile.address.line2 : ''}
+                    </p>
+                }
               </div>
-              <input onChange={(e) => setImage(e.target.files[0])} type="file" id="image" hidden />
-            </label>
-            : <img className='w-36 rounded bg-primary' src={profile.image} alt="" />
-        }
+            </div>
 
-        {
-          isEdit
-            ? <input className='bg-gray-50 text-3xl font-medium max-w-60 mt-4' type="text" value={profile.name} onChange={(e) => setProfile(prev => ({ ...prev, name: e.target.value }))} />
-            : <p className='font-medium text-3xl text-neutral-800 mt-4'>{profile.name}</p>
-        }
+            <div>
+              <p className='text-neutral-500 underline mt-3'>BASIC INFORMATION</p>
+              <div className='grid grid-cols-[1fr_3fr] gap-y-2.5 mt-3 text-neutral-700'>
+                <p className='font-medium'>Gender :</p>
+                {
+                  isEdit
+                    ? <select className='max-w-20 bg-gray-100' value={profile.gender} onChange={e => setProfile(prev => ({ ...prev, gender: e.target.value }))}>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                    </select>
+                    : <p className='text-gray-400'>{profile.gender}</p>
+                }
+                <p className='font-medium'>Birthday :</p>
+                {
+                  isEdit
+                    ? <input className='max-w-28 bg-gray-100' type="date" value={profile.dob} onChange={e => setProfile(prev => ({ ...prev, dob: e.target.value }))} />
+                    : <p className='text-gray-400'>{profile.dob}</p>
+                }
+              </div>
+            </div>
 
-        <hr className='bg-zinc-400 h-[1px] border-none' />
-        <div>
-          <p className='text-neutral-500 underline mt-3'>CONTACT INFORMATION</p>
-          <div className='grid grid-cols-[1fr_3fr] gap-y-2.5 mt-3 text-neutral-700'>
-            <p className='font-medium'>Username: </p>
-            <p className='text-blue-500'>{profile.username}</p>
-            <p className='font-medium'>Email :</p>
-            {
-              isEdit
-                ? <input className='bg-gray-100 max-w-52' type="email" value={profile.email} onChange={(e) => setProfile(prev => ({ ...prev, email: e.target.value }))} />
-                : <p className='text-blue-400'>{profile.email}</p>
-            }
-            <p className='font-medium'>Phone :</p>
-            {
-              isEdit
-                ? <input className='bg-gray-100 max-w-52' type="text" value={profile.phone} onChange={(e) => setProfile(prev => ({ ...prev, phone: e.target.value }))} />
-                : <p className='text-blue-400'>{profile.phone}</p>
-            }
-            <p className='font-medium'>Address :</p>
-            {
-              isEdit
-                ? <p>
-                  <input className='bg-gray-50' value={profile.address ? profile.address.line1 : ''} onChange={e => setProfile(prev => ({ ...prev, address: { ...prev.address, line1: e.target.value } }))} type="text" />
-                  <br />
-                  <input className='bg-gray-50' value={profile.address ? profile.address.line2 : ''} onChange={e => setProfile(prev => ({ ...prev, address: { ...prev.address, line2: e.target.value } }))} type="text" />
-                </p>
-                : <p className='text-gray-500'>
-                  {profile.address ? profile.address.line1 : ''}
-                  <br />
-                  {profile.address ? profile.address.line2 : ''}
-                </p>
-            }
+            <div className='mt-10'>
+              {
+                isEdit
+                  ? <button className='border border-primary px-8 py-2 rounded-full cursor-pointer hover:bg-[#5F6FFF] hover:text-white transition-all' onClick={updateUserProfileData}>Save Information</button>
+                  : <button className='border border-primary px-8 py-2 rounded-full cursor-pointer hover:bg-[#5F6FFF] hover:text-white transition-all' onClick={() => setIsEdit(true)}>Edit</button>
+              }
+            </div>
+
           </div>
-        </div>
-
-        <div>
-          <p className='text-neutral-500 underline mt-3'>BASIC INFORMATION</p>
-          <div className='grid grid-cols-[1fr_3fr] gap-y-2.5 mt-3 text-neutral-700'>
-            <p className='font-medium'>Gender :</p>
-            {
-              isEdit
-                ? <select className='max-w-20 bg-gray-100' value={profile.gender} onChange={e => setProfile(prev => ({ ...prev, gender: e.target.value }))}>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                </select>
-                : <p className='text-gray-400'>{profile.gender}</p>
-            }
-            <p className='font-medium'>Birthday :</p>
-            {
-              isEdit
-                ? <input className='max-w-28 bg-gray-100' type="date" value={profile.dob} onChange={e => setProfile(prev => ({ ...prev, dob: e.target.value }))} />
-                : <p className='text-gray-400'>{profile.dob}</p>
-            }
-          </div>
-        </div>
-
-        <div className='mt-10'>
-          {
-            isEdit
-              ? <button className='border border-primary px-8 py-2 rounded-full cursor-pointer hover:bg-[#5F6FFF] hover:text-white transition-all' onClick={updateUserProfileData}>Save Information</button>
-              : <button className='border border-primary px-8 py-2 rounded-full cursor-pointer hover:bg-[#5F6FFF] hover:text-white transition-all' onClick={() => setIsEdit(true)}>Edit</button>
-          }
-        </div>
-
-      </div>
-    ))
+        )
+      }
+    </LoadWrapper>
+  )
 }
 
 export default MyProfile
