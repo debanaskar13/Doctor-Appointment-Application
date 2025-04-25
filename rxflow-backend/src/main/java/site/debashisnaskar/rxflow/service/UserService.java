@@ -134,4 +134,31 @@ public class UserService {
     public List<Appointment> getAppointmentsByUserId(int userId) throws SQLException {
         return userRepository.getAppointmentsByUser(userId);
     }
+
+    public boolean cancelAppointment(int userId, int appointmentId) throws SQLException {
+
+        Appointment appointment = userRepository.findAppointmentById(appointmentId);
+
+        if(appointment == null) {
+            throw new RuntimeException("Appointment not found");
+        }
+
+        if(userId != appointment.getUser().getId()){
+            throw new RuntimeException("User id mismatch : can't cancel appointment");
+        }
+
+        boolean isCancelled = userRepository.cancelAppointment(appointmentId);
+
+        Map<String, ArrayList<String>> slotsBooked = appointment.getDoctor().getSlotsBooked();
+
+        ArrayList<String> slotsBookedByDate = slotsBooked.get(appointment.getSlotDate());
+        slotsBookedByDate.remove(appointment.getSlotTime());
+
+        slotsBooked.put(appointment.getSlotDate(),slotsBookedByDate);
+
+        boolean isUpdated = doctorRepository.updateSlotBooked(appointment.getDoctor().getId(), slotsBooked);
+
+
+        return isCancelled && isUpdated;
+    }
 }

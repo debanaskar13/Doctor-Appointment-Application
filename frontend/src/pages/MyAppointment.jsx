@@ -30,7 +30,7 @@ const MyAppointment = () => {
       const { data } = await ApiService.fetchMyAppointments()
 
       if (data.success) {
-        console.log(data.appointments)
+        // console.log(data.appointments)
         setAppointments(data.appointments)
       } else {
         toast.error(data.message)
@@ -41,6 +41,27 @@ const MyAppointment = () => {
       toast.error(error.response.data.message)
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const cancelAppointment = async (appointmentId) => {
+
+    console.log(appointmentId)
+
+    try {
+
+      const { data } = await ApiService.cancelAppointment({
+        id: appointmentId
+      });
+
+      if (data.success) {
+        toast.success(data.message)
+      } else {
+        toast.error('Appointment cancellation failed')
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error(error.response.data.message)
     }
 
   }
@@ -78,8 +99,15 @@ const MyAppointment = () => {
                 </div>
                 <div></div>
                 <div className='flex flex-col gap-2 justify-end'>
-                  <button className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border border-gray-300 rounded cursor-pointer hover:bg-[#5F6FFF] hover:text-white transition-all duration-300'>Pay Online</button>
-                  <button className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border border-gray-300 rounded cursor-pointer hover:bg-red-600 hover:text-white transition-all duration-300'>Cancel Appointment</button>
+                  {
+                    !item.cancelled && <button className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border border-gray-300 rounded cursor-pointer hover:bg-[#5F6FFF] hover:text-white transition-all duration-300'>Pay Online</button>
+                  }
+                  {
+                    !item.cancelled && <button onClick={() => cancelAppointment(item.id)} className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border border-gray-300 rounded cursor-pointer hover:bg-red-600 hover:text-white transition-all duration-300'>Cancel Appointment</button>
+                  }
+                  {
+                    item.cancelled && <p className='text-lg text-red-500 items-center'>Cancelled</p>
+                  }
                 </div>
               </div>
             ))

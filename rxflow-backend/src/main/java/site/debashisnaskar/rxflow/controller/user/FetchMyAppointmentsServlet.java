@@ -32,7 +32,7 @@ public class FetchMyAppointmentsServlet extends HttpServlet {
             String responseBody = gson.toJson(myAppointments);
 
             resp.getWriter().write("{\"success\":true,\"appointments\":"+responseBody+"}");
-            logger.info("My appointments fetched successfully" + responseBody);
+            logger.info("My appointments fetched successfully");
         } catch (Exception e) {
             logger.severe(e.getMessage()+"\n"+e);
             Utils.buildJsonResponse(e.getMessage(),false,resp,HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

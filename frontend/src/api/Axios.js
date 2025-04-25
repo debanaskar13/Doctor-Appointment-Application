@@ -51,6 +51,11 @@ class ApiService {
         return await api.get('/user/my-appointments')
     }
 
+    static async cancelAppointment(requestBody) {
+        this.setAuthToken(localStorage.getItem('token'))
+        return await api.post('/user/cancel-appointment', requestBody)
+    }
+
 }
 
 export default ApiService;

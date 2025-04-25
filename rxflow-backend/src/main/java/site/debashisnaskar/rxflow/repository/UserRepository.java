@@ -1,6 +1,7 @@
 package site.debashisnaskar.rxflow.repository;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import site.debashisnaskar.rxflow.dto.UserDto;
 import site.debashisnaskar.rxflow.model.Address;
 import site.debashisnaskar.rxflow.model.Appointment;
@@ -9,9 +10,11 @@ import site.debashisnaskar.rxflow.model.User;
 import site.debashisnaskar.rxflow.utils.DB;
 import site.debashisnaskar.rxflow.utils.Utils;
 
+import java.lang.reflect.Type;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class UserRepository {
 
@@ -174,7 +177,7 @@ public class UserRepository {
     }
 
     public List<Appointment> getAppointmentsByUser(int userId) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement("SELECT a.id, a.user_id, a.doctor_id, a.slot_date, a.slot_time, a.amount, d.speciality, u.name, u.address, u.image  FROM appointments a\n" +
+        PreparedStatement stmt = connection.prepareStatement("SELECT *  FROM appointments a\n" +
                 "JOIN doctors d on d.id = a.doctor_id\n" +
                 "JOIN users u on d.user_id = u.id\n" +
                 "WHERE a.user_id = ?\n" +
@@ -199,14 +202,74 @@ public class UserRepository {
                     .doctor(Doctor.builder()
                             .id(rs.getInt("doctor_id"))
                             .speciality(rs.getString("speciality"))
+                            .degree(rs.getString("degree"))
+                            .fees(rs.getDouble("fees"))
+                            .available(rs.getBoolean("available"))
+                            .experience(rs.getString("experience"))
+                            .about(rs.getString("about"))
                             .build())
                     .slotDate(rs.getString("slot_date"))
                     .slotTime(rs.getString("slot_time"))
                     .amount(rs.getDouble("amount"))
+                    .date(rs.getString("date"))
+                    .cancelled(rs.getBoolean("cancelled"))
+                    .payment(rs.getBoolean("payment"))
+                    .isCompleted(rs.getBoolean("is_completed"))
                     .build();
 
             appointments.add(appointment);
         }
         return appointments;
+    }
+
+    public Appointment findAppointmentById(int appointmentId) throws SQLException {
+        Type type = new TypeToken<Map<String, ArrayList<String>>>(){}.getType();
+
+        PreparedStatement stmt = connection.prepareStatement("select * from appointments a\n" +
+                "join doctors d on d.id = a.doctor_id\n" +
+                "join users u on a.user_id = u.id\n" +
+                "where a.id = ?");
+
+        stmt.setInt(1, appointmentId);
+
+        ResultSet rs = stmt.executeQuery();
+
+        if(rs.next()) {
+
+            return Appointment.builder()
+                    .id(rs.getInt("id"))
+                    .user(User.builder()
+                            .id(rs.getInt("user_id"))
+                            .name(rs.getString("name"))
+                            .build())
+                    .doctor(Doctor.builder()
+                            .id(rs.getInt("doctor_id"))
+                            .speciality(rs.getString("speciality"))
+                            .degree(rs.getString("degree"))
+                            .fees(rs.getDouble("fees"))
+                            .available(rs.getBoolean("available"))
+                            .experience(rs.getString("experience"))
+                            .about(rs.getString("about"))
+                            .slotsBooked(gson.fromJson(rs.getString("slots_booked"), type))
+                            .build())
+                    .slotDate(rs.getString("slot_date"))
+                    .slotTime(rs.getString("slot_time"))
+                    .amount(rs.getDouble("amount"))
+                    .date(rs.getString("date"))
+                    .cancelled(rs.getBoolean("cancelled"))
+                    .payment(rs.getBoolean("payment"))
+                    .isCompleted(rs.getBoolean("is_completed"))
+                    .build();
+        }
+        return null;
+    }
+
+    public boolean cancelAppointment(int appointmentId) throws SQLException {
+
+        PreparedStatement stmt = connection.prepareStatement("UPDATE appointments SET cancelled = true WHERE id = ?");
+        stmt.setInt(1, appointmentId);
+        int rowsAffected = stmt.executeUpdate();
+
+        return rowsAffected > 0;
     }
 }
