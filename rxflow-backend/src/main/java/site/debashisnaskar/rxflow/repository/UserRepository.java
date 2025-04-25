@@ -181,8 +181,7 @@ public class UserRepository {
                 "JOIN doctors d on d.id = a.doctor_id\n" +
                 "JOIN users u on d.user_id = u.id\n" +
                 "WHERE a.user_id = ?\n" +
-                "ORDER BY a.slot_date ASC,\n" +
-                "a.slot_time ASC");
+                "ORDER BY a.date DESC\n");
 
         stmt.setInt(1, userId);
 

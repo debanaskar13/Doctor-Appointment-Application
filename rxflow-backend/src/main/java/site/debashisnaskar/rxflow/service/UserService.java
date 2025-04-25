@@ -89,12 +89,28 @@ public class UserService {
 
         Doctor doctor = doctorRepository.findById(doctorId);
 
+
         if(doctor == null) {
             throw new RuntimeException("Doctor not found");
         }
 
         if(!doctor.isAvailable()){
             throw new RuntimeException("Doctor is not available");
+        }
+
+        if(doctor.getUser().getId() == userId){
+            throw new RuntimeException("Doctor and Patient are the same");
+        }
+
+//        If user try to book an appointment for the same day same time but different doctor
+        List<Appointment> appointmentsByUser = userRepository.getAppointmentsByUser(userId);
+
+        for(Appointment appointment : appointmentsByUser){
+            String slotDateByUser = appointment.getSlotDate();
+            String slotTimeByUser = appointment.getSlotTime();
+            if(appointmentRequest.getSlotDate().equals(slotDateByUser) && appointmentRequest.getSlotTime().equals(slotTimeByUser) && !appointment.isCancelled() && !appointment.isCompleted()){
+                throw new RuntimeException("You already have an appointment for the same slot");
+            }
         }
 
         Map<String, ArrayList<String>> slotsBooked = doctor.getSlotsBooked() == null ? new HashMap<>() : doctor.getSlotsBooked();

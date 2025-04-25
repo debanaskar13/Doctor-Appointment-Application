@@ -21,7 +21,7 @@ public class EmailTemplateProvider {
                         </tr>
                         <tr>
                           <td style="padding: 8px; font-weight: bold;">📧 Email:</td>
-                          <td style="padding: 8px;"> {{email}} </td>
+                          <td style="padding: 8px;"> {{username}} </td>
                         </tr>
                         <tr>
                           <td style="padding: 8px; font-weight: bold;">🔑 Role:</td>
@@ -34,7 +34,7 @@ public class EmailTemplateProvider {
                 </html>
                 """;
 
-        return content.replace("{{name}}", data.get("name")).replace("{{email}}", data.get("email")).replace("{{role}}", data.get("role"));
+        return content.replace("{{name}}", data.get("name")).replace("{{username}}", data.get("username")).replace("{{role}}", data.get("role"));
     }
 
     public static String getWelcomeUserTemplate(String name) {

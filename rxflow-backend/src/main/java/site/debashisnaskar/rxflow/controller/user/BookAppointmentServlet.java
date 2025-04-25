@@ -35,7 +35,7 @@ public class BookAppointmentServlet extends HttpServlet {
             Utils.buildJsonResponse("Appointment Booked",true,resp,HttpServletResponse.SC_OK);
             logger.info("Appointment Booked by userId : " + appointmentRequest.getUserId() + " with doctorID : " + appointmentRequest.getDoctorId());
         } catch (Exception e) {
-            Utils.buildJsonResponse("Appointment Booking Failed : " + e.getMessage(),false,resp,HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            Utils.buildJsonResponse( e.getMessage(),false,resp,HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             logger.severe(e.getMessage());
         }
 

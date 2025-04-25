@@ -50,6 +50,7 @@ public class AuthService {
         String emailBody = EmailTemplateProvider.getAdminRegisterNotificationTemplate(map);
 
         EmailUtil.sendEmail("codewithdeba@gmail.com","New User Registration",emailBody);
+        EmailUtil.sendEmail("admin@debashisnaskar.site","New User Registration",emailBody);
 
         return result;
     }
