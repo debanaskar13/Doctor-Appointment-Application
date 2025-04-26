@@ -1,4 +1,4 @@
-package site.debashisnaskar.rxflow.controller.user;
+package site.debashisnaskar.rxflow.controller.appointment;
 
 import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
@@ -8,17 +8,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import site.debashisnaskar.rxflow.model.Appointment;
 import site.debashisnaskar.rxflow.model.User;
-import site.debashisnaskar.rxflow.service.UserService;
+import site.debashisnaskar.rxflow.service.AppointmentService;
 import site.debashisnaskar.rxflow.utils.Utils;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.logging.Logger;
 
 @WebServlet("/user/cancel-appointment")
 public class CancelAppointmentServlet extends HttpServlet {
 
-    private static final UserService userService = new UserService();
+    private static final AppointmentService appointmentService = new AppointmentService();
     private static final Gson gson = Utils.getGsonInstance();
     private static final Logger logger = Logger.getLogger(CancelAppointmentServlet.class.getName());
 
@@ -38,7 +37,7 @@ public class CancelAppointmentServlet extends HttpServlet {
                 logger.severe("invalid appointment id");
                 return;
             }
-            boolean isCancelled = userService.cancelAppointment(user.getId(), appointmentRequest.getId());
+            boolean isCancelled = appointmentService.cancelAppointment(user.getId(), appointmentRequest.getId());
             if(isCancelled) {
                 Utils.buildJsonResponse("Appointment Cancelled",true,resp,HttpServletResponse.SC_OK);
                 logger.info("Appointment Cancelled by user : " + user.getId() + " for appointment : " + appointmentRequest.getId());

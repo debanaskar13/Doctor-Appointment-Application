@@ -31,7 +31,7 @@ response = requests.get("https://randomuser.me/api/?gender=male&inc=name,picture
 data = response.json()
 
 # Get the image URL (headshot)
-image_url_1 = data['results'][0]['picture']['large']
+# image_url_1 = data['results'][0]['picture']['large']
 
 # Function to generate a doctor row
 def generate_high_quality_doctor():
@@ -41,19 +41,23 @@ def generate_high_quality_doctor():
     name = f"{fname} {lname}"
     username = f"{fname.lower()}.{lname.lower()}{random.randint(1, 99)}"
     password = f"Pass@{random.randint(1000,9999)}"
-    email = f"{username}@example.com"
+    email = f"{username}@gmail.com"
     address1 = fake.street_address()
     address2 = f"{fake.city()}, {fake.state()}"
-    speciality = random.choice(specialities)
-    degree = random.choice(degrees)
-    experience = f"{random.randint(1, 15)} Year"
-    about = f"Dr. {name}, a skilled {speciality.lower()}, {random.choice(about_phrases)}"
-    fees = f"{random.randint(50, 300)}"
+    # speciality = random.choice(specialities)
+    # degree = random.choice(degrees)
+    # experience = f"{random.randint(1, 15)} Year"
+    # about = f"Dr. {name}, a skilled {speciality.lower()}, {random.choice(about_phrases)}"
+    # fees = f"{random.randint(50, 300)}"
     phone = fake.phone_number()
     dob = fake.date_of_birth(minimum_age=30, maximum_age=60).strftime('%Y-%m-%d')
-    image_url = image_url_1
+    # image_url = image_url_1
 
-    return [image_url, username, password, name, email, address1, address2, speciality, degree, experience, about, fees, phone, dob, gender]
+    return [
+        # image_url, 
+        username, password, name, email, address1, address2, 
+            # speciality, degree, experience, about, fees, 
+            phone, dob, gender]
 
 # Columns
 extended_columns = [
@@ -66,7 +70,7 @@ data_extended = [generate_high_quality_doctor() for _ in range(100)]
 df_extended = pd.DataFrame(data_extended, columns=extended_columns)
 
 # Save CSV
-file_path_extended = "doctors_data_extended.csv"
+file_path_extended = "user_data_extended.csv"
 df_extended.to_csv(file_path_extended, index=False)
 
-file_path_extended
+# file_path_extended

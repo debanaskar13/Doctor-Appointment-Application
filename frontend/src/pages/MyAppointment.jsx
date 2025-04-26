@@ -65,6 +65,64 @@ const MyAppointment = () => {
       console.log(error)
       toast.error(error.response.data.message)
     }
+  }
+
+  const initPay = (order) => {
+
+    const options = {
+      key: import.meta.env.VITE_RAZOR_PAY_API_KEY,
+      amount: order.amount,
+      currency: order.currency,
+      name: 'RxFlow Apoointment Payment',
+      description: 'Rxflow Apoointment Payment',
+      order_id: order.id,
+      receipt: order.receipt,
+      handler: async (response) => {
+        try {
+
+          const { data } = await ApiService.verifyPaymentRazorpay({
+            razorpayOrderId: response.razorpay_order_id,
+            razorpayPaymentId: response.razorpay_payment_id,
+            razorpaySignature: response.razorpay_signature
+          })
+
+          if (data.success) {
+            toast.success(data.message)
+            getMyAppointments()
+          }
+
+        } catch (error) {
+          toast.error(error.response ? error.response.data.message : 'something went wrong')
+        }
+      }
+    }
+
+    const rzp = new window.Razorpay(options)
+    rzp.open()
+
+  }
+
+  const appointmentRazorPay = async (appointmentId) => {
+
+    try {
+
+      const { data } = await ApiService.paymentRazorPay({
+        id: appointmentId
+      })
+
+      if (data.success) {
+
+        // console.log(data.order.modelJson.map)
+        initPay(data.order.modelJson.map)
+
+      } else {
+        toast.error(data.message)
+      }
+
+    } catch (error) {
+      console.log(error)
+      toast.error(error.response ? error.response.data.message : 'something went wrong')
+    }
 
   }
 
@@ -102,7 +160,10 @@ const MyAppointment = () => {
                 <div></div>
                 <div className='flex flex-col gap-2 justify-end'>
                   {
-                    !item.cancelled && <button className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border border-gray-300 rounded cursor-pointer hover:bg-[#5F6FFF] hover:text-white transition-all duration-300'>Pay Online</button>
+                    !item.cancelled && !item.payment && <button onClick={() => appointmentRazorPay(item.id)} className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border border-gray-300 rounded cursor-pointer hover:bg-[#5F6FFF] hover:text-white transition-all duration-300'>Pay Online</button>
+                  }
+                  {
+                    item.payment && <button className='sm:min-w-48 py-2 border border-green-500 text-green-500 rounded'>Paid</button>
                   }
                   {
                     !item.cancelled && <button onClick={() => cancelAppointment(item.id)} className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border border-gray-300 rounded cursor-pointer hover:bg-red-600 hover:text-white transition-all duration-300'>Cancel Appointment</button>
@@ -110,6 +171,7 @@ const MyAppointment = () => {
                   {
                     item.cancelled && <button className='sm:min-w-48 py-2 border border-red-500 text-red-500 rounded'>Appointment cancelled</button>
                   }
+
                 </div>
               </div>
             ))

@@ -5,6 +5,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import site.debashisnaskar.rxflow.dto.LoginRequest;
 import site.debashisnaskar.rxflow.dto.LoginResponse;
 import site.debashisnaskar.rxflow.dto.RegisterRequest;
+import site.debashisnaskar.rxflow.model.Address;
 import site.debashisnaskar.rxflow.model.User;
 import site.debashisnaskar.rxflow.repository.UserRepository;
 import site.debashisnaskar.rxflow.utils.DB;
@@ -31,10 +32,11 @@ public class AuthService {
         User user = User.builder()
                 .username(registerRequest.getUsername())
                 .password(hashPassword)
+                .email(registerRequest.getEmail() != null ?  registerRequest.getEmail() : null)
                 .name(registerRequest.getName())
                 .image(defaultImageUrl)
                 .role("ROLE_USER")
-                .address(registerRequest.getAddress())
+                .address(registerRequest.getAddress() != null ? registerRequest.getAddress() : Address.builder().line1("").line2("").build())
                 .phone(registerRequest.getPhone() != null ? registerRequest.getPhone() : "0000000000")
                 .dob(registerRequest.getDob() != null ? registerRequest.getDob() : "Not Selected" )
                 .gender(registerRequest.getGender() != null ? registerRequest.getGender() : "Not Selected")
@@ -49,7 +51,7 @@ public class AuthService {
 
         String emailBody = EmailTemplateProvider.getAdminRegisterNotificationTemplate(map);
 
-        EmailUtil.sendEmail("codewithdeba@gmail.com","New User Registration",emailBody);
+//        EmailUtil.sendEmail("codewithdeba@gmail.com","New User Registration",emailBody);
         EmailUtil.sendEmail("admin@debashisnaskar.site","New User Registration",emailBody);
 
         return result;

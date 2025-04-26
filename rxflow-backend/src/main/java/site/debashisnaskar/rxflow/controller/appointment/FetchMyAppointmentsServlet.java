@@ -1,4 +1,4 @@
-package site.debashisnaskar.rxflow.controller.user;
+package site.debashisnaskar.rxflow.controller.appointment;
 
 import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import site.debashisnaskar.rxflow.model.Appointment;
 import site.debashisnaskar.rxflow.model.User;
-import site.debashisnaskar.rxflow.service.UserService;
+import site.debashisnaskar.rxflow.service.AppointmentService;
 import site.debashisnaskar.rxflow.utils.Utils;
 
 import java.io.IOException;
@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 
 @WebServlet("/user/my-appointments")
 public class FetchMyAppointmentsServlet extends HttpServlet {
-    private static final UserService userService = new UserService();
+    private static final AppointmentService appointmentService = new AppointmentService();
     private static final Gson gson = Utils.getGsonInstance();
     private static final Logger logger = Logger.getLogger(FetchMyAppointmentsServlet.class.getName());
 
@@ -28,7 +28,7 @@ public class FetchMyAppointmentsServlet extends HttpServlet {
         User user = (User) req.getAttribute("user");
 
         try {
-            List<Appointment> myAppointments = userService.getAppointmentsByUserId(user.getId());
+            List<Appointment> myAppointments = appointmentService.getAppointmentsByUserId(user.getId());
             String responseBody = gson.toJson(myAppointments);
 
             resp.getWriter().write("{\"success\":true,\"appointments\":"+responseBody+"}");

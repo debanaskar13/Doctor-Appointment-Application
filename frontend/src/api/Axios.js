@@ -51,10 +51,22 @@ class ApiService {
         return await api.get('/user/my-appointments')
     }
 
-    static async cancelAppointment(requestBody) {
+    static async cancelAppointment(payload) {
         this.setAuthToken(localStorage.getItem('token'))
-        return await api.post('/user/cancel-appointment', requestBody)
+        return await api.post('/user/cancel-appointment', payload)
     }
+
+    static async paymentRazorPay(payload) {
+        this.setAuthToken(localStorage.getItem('token'))
+        return await api.post('/user/payment/payment-razorpay', payload)
+    }
+
+    static async verifyPaymentRazorpay(payload) {
+        this.setAuthToken(localStorage.getItem('token'))
+        return await api.post('/user/payment/verify-payment', payload)
+    }
+
+
 
 }
 

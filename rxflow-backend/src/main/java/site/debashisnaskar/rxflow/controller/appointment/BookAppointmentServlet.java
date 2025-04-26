@@ -1,4 +1,4 @@
-package site.debashisnaskar.rxflow.controller.user;
+package site.debashisnaskar.rxflow.controller.appointment;
 
 import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import site.debashisnaskar.rxflow.dto.BookAppointmentRequest;
 import site.debashisnaskar.rxflow.model.User;
-import site.debashisnaskar.rxflow.service.UserService;
+import site.debashisnaskar.rxflow.service.AppointmentService;
 import site.debashisnaskar.rxflow.utils.Utils;
 
 import java.io.IOException;
@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 public class BookAppointmentServlet extends HttpServlet {
 
     private static final Gson gson = Utils.getGsonInstance();
-    private static final UserService userService = new UserService();
+    private static final AppointmentService appointmentService = new AppointmentService();
     private static final Logger logger = Logger.getLogger(BookAppointmentServlet.class.getName());
 
     @Override
@@ -31,7 +31,7 @@ public class BookAppointmentServlet extends HttpServlet {
         appointmentRequest.setUserId(user.getId());
 
         try {
-            userService.bookAppointment(appointmentRequest);
+            appointmentService.bookAppointment(appointmentRequest);
             Utils.buildJsonResponse("Appointment Booked",true,resp,HttpServletResponse.SC_OK);
             logger.info("Appointment Booked by userId : " + appointmentRequest.getUserId() + " with doctorID : " + appointmentRequest.getDoctorId());
         } catch (Exception e) {
