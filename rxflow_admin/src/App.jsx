@@ -11,6 +11,7 @@ import Dashborad from './pages/Admin/Dashborad'
 import AllApointment from './pages/Admin/AllApointment'
 import AddDoctor from './pages/Admin/AddDoctor'
 import DoctorList from './pages/Admin/DoctorList'
+import UserList from './pages/Admin/UserList'
 
 function App() {
 
@@ -29,6 +30,7 @@ function App() {
             <Route path='/all-appointments' element={<AllApointment />} />
             <Route path='/add-doctor' element={<AddDoctor />} />
             <Route path='/doctor-list' element={<DoctorList />} />
+            <Route path='/user-list' element={<UserList />} />
           </Routes>
         </div>
       </div >

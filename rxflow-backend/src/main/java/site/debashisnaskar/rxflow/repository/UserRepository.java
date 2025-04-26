@@ -32,7 +32,7 @@ public class UserRepository {
 
     public List<User> findAll() throws SQLException {
         List<User> users = new ArrayList<>();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users");
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users where role = 'ROLE_USER'");
         ResultSet rs = stmt.executeQuery();
 
         while (rs.next()) {

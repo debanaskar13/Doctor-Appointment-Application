@@ -82,4 +82,7 @@ public class UserService {
     }
 
 
+    public boolean updateUser(User user) throws SQLException {
+        return userRepository.updateUserProfile(user);
+    }
 }

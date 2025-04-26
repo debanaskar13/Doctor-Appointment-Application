@@ -58,7 +58,7 @@ public class AdminFrontController extends HttpServlet {
                 }
                 break;
             case "users":
-                if(parts.length == 2){
+                if(parts.length == 2 ){
                     req.getRequestDispatcher("/api/admin/users").forward(req, resp);
                 }else {
                     if(parts.length == 3 && !parts[2].isEmpty()){

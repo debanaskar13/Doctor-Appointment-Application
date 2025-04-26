@@ -1,5 +1,6 @@
-package site.debashisnaskar.rxflow.controller.user;
+package site.debashisnaskar.rxflow.controller.admin;
 
+import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -17,6 +18,7 @@ public class UpdateDeleteAndFetchUserServlet extends HttpServlet {
 
     private static final Pattern pattern = Pattern.compile("^/([a-zA-Z0-9]+)/?$");
     private static final UserService userService = new UserService();
+    private static final Gson gson = Utils.getGsonInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -42,5 +44,32 @@ public class UpdateDeleteAndFetchUserServlet extends HttpServlet {
                 resp.getWriter().write("\"success\": \"error\", \"message\": \"invalid user id\"");
             }
         }
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        resp.setContentType("application/json");
+        String userId = req.getAttribute("userId").toString();
+        String requestBodyJson = Utils.readJsonBody(req);
+
+        User user = gson.fromJson(requestBodyJson, User.class);
+
+        if(userId != null) {
+            try {
+                user.setId(Integer.parseInt(userId));
+                boolean isUpdated = userService.updateUser(user);
+                if(isUpdated) {
+                    Utils.buildJsonResponse("User updated successfully",true,resp,HttpServletResponse.SC_OK);
+                }else{
+                    Utils.buildJsonResponse("User update failed",false,resp,HttpServletResponse.SC_BAD_REQUEST);
+                }
+            } catch (Exception e) {
+                Utils.buildJsonResponse(e.getMessage(),false,resp,HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+        }
+
+
+
     }
 }

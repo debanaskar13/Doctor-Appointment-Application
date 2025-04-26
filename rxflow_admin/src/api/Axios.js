@@ -36,6 +36,16 @@ class ApiService {
         })
     }
 
+    static async fetchAllUsers() {
+        this.setAuthToken(localStorage.getItem('aToken'))
+        return await api.get('/admin/users')
+    }
+
+    static async updateUser(userId, payload) {
+        this.setAuthToken(localStorage.getItem('aToken'))
+        return await api.put('/admin/users/' + userId, payload)
+    }
+
 
 }
 
