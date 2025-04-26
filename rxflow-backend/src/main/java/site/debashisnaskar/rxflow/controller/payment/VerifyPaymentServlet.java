@@ -33,6 +33,7 @@ public class VerifyPaymentServlet extends HttpServlet {
 
             if(isVerified) {
                 Utils.buildJsonResponse("Payment successful",true,resp,HttpServletResponse.SC_OK);
+
             }
 
         } catch (Exception e) {
