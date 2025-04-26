@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom'
 
 const MyAppointment = () => {
 
-  const { doctors, profile, token } = useContext(AppContext)
+  const { doctors, profile, token, getAllDoctors } = useContext(AppContext)
   const [appointments, setAppointments] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const months = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -19,7 +19,7 @@ const MyAppointment = () => {
 
   const slotDateFormat = (slotDate) => {
     const arr = slotDate.split('_')
-    return arr[0] + " " + months[arr[1]] + " " + arr[2]
+    return arr[0] + " " + months[Number(arr[1])] + " " + arr[2]
   }
 
   const getMyAppointments = async () => {
@@ -56,6 +56,8 @@ const MyAppointment = () => {
 
       if (data.success) {
         toast.success(data.message)
+        getMyAppointments()
+        getAllDoctors()
       } else {
         toast.error('Appointment cancellation failed')
       }
@@ -106,7 +108,7 @@ const MyAppointment = () => {
                     !item.cancelled && <button onClick={() => cancelAppointment(item.id)} className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border border-gray-300 rounded cursor-pointer hover:bg-red-600 hover:text-white transition-all duration-300'>Cancel Appointment</button>
                   }
                   {
-                    item.cancelled && <p className='text-lg text-red-500 items-center'>Cancelled</p>
+                    item.cancelled && <button className='sm:min-w-48 py-2 border border-red-500 text-red-500 rounded'>Appointment cancelled</button>
                   }
                 </div>
               </div>

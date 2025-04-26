@@ -2,6 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import { jwtDecode } from 'jwt-decode';
 import { toast } from "react-toastify";
 import ApiService from '../api/Axios'
+import { useNavigate } from 'react-router-dom'
 
 
 export const AdminContext = createContext()
@@ -11,6 +12,7 @@ const AdminContextProvider = (props) => {
     const [token, setToken] = useState(localStorage.getItem('aToken'))
     const [role, setRole] = useState('')
     const [doctors, setDoctors] = useState([])
+    const navigate = useNavigate()
 
     const getAllDoctors = async () => {
 
@@ -63,7 +65,7 @@ const AdminContextProvider = (props) => {
                 } else {
                     toast.error('Token expired. Please login again')
                     localStorage.removeItem('aToken')
-
+                    navigate('/')
                 }
             } catch (error) {
                 toast.error('Invalid token')
