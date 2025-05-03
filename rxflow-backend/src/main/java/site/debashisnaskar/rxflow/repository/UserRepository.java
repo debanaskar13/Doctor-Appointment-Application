@@ -2,6 +2,7 @@ package site.debashisnaskar.rxflow.repository;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import site.debashisnaskar.rxflow.dto.Page;
 import site.debashisnaskar.rxflow.dto.UserDto;
 import site.debashisnaskar.rxflow.model.Address;
 import site.debashisnaskar.rxflow.model.Appointment;
@@ -30,16 +31,51 @@ public class UserRepository {
         }
     }
 
-    public List<User> findAll() throws SQLException {
+    public Page<List<User>> findAll(Page<List<User>> page) throws SQLException {
+        List<String> allowedColumns = List.of("id", "name", "username", "email");
+        List<String> allowedDirections = List.of("ASC", "DESC");
+
+        String sortBy = page.getSortBy();
+        String direction = page.getSorDirection();
+
+        if(!allowedColumns.contains(sortBy)) {
+            sortBy = "id";
+        }
+
+        if(!allowedDirections.contains(direction)) {
+            direction = "ASC";
+        }
+
         List<User> users = new ArrayList<>();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users where role = 'ROLE_USER'");
+        PreparedStatement stmt = connection.prepareStatement(
+                "SELECT * " +
+                "FROM users " +
+                "WHERE role = 'ROLE_USER' " +
+                "ORDER BY " + sortBy + " " + direction + " " +
+                "LIMIT ? OFFSET ?"
+        );
+
+        stmt.setLong(1,page.getPageSize());
+        stmt.setLong(2,(page.getPageNumber() - 1) * page.getPageSize() + 1);
+
         ResultSet rs = stmt.executeQuery();
 
         while (rs.next()) {
             User user = buildUser(rs, rs.getInt("id"));
             users.add(user);
         }
-        return users;
+        page.setData(users);
+
+        stmt = connection.prepareStatement("SELECT COUNT(*) FROM users WHERE role = 'ROLE_USER'");
+        rs = stmt.executeQuery();
+
+        if(rs.next()) {
+            long count = rs.getLong("count");
+            long totalPages = count % page.getPageSize() == 0 ? count / page.getPageSize() : count / page.getPageSize() + 1;
+            page.setTotalPages(totalPages);
+        }
+
+        return page;
     }
 
     public User findById(int id) throws SQLException {

@@ -88,7 +88,7 @@ const MyAppointment = () => {
 
           if (data.success) {
             toast.success(data.message)
-            getMyAppointments()
+            navigate('/my-appointments')
           }
 
         } catch (error) {
@@ -163,7 +163,7 @@ const MyAppointment = () => {
                     !item.cancelled && !item.payment && <button onClick={() => appointmentRazorPay(item.id)} className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border border-gray-300 rounded cursor-pointer hover:bg-[#5F6FFF] hover:text-white transition-all duration-300'>Pay Online</button>
                   }
                   {
-                    item.payment && <button className='sm:min-w-48 py-2 border border-green-500 text-green-500 rounded'>Paid</button>
+                    !item.cancelled && item.payment && <button className='sm:min-w-48 py-2 bg-gray-200 text-gray-700 rounded'>Paid</button>
                   }
                   {
                     !item.cancelled && <button onClick={() => cancelAppointment(item.id)} className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border border-gray-300 rounded cursor-pointer hover:bg-red-600 hover:text-white transition-all duration-300'>Cancel Appointment</button>

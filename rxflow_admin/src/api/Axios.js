@@ -36,9 +36,9 @@ class ApiService {
         })
     }
 
-    static async fetchAllUsers() {
+    static async fetchAllUsers(page, limit, sortField, sortDirection) {
         this.setAuthToken(localStorage.getItem('aToken'))
-        return await api.get('/admin/users')
+        return await api.get('/admin/users?page=' + page + '&limit=' + limit + '&sortBy=' + sortField + '&direction=' + sortDirection)
     }
 
     static async updateUser(userId, payload) {

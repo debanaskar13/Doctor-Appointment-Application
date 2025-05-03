@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import site.debashisnaskar.rxflow.dto.BookAppointmentRequest;
+import site.debashisnaskar.rxflow.dto.Page;
 import site.debashisnaskar.rxflow.dto.UpdateProfileRequest;
 import site.debashisnaskar.rxflow.exception.UserNotFoundException;
 import site.debashisnaskar.rxflow.model.Appointment;
@@ -40,9 +41,9 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public List<User> findAllUsers() {
+    public Page<List<User>> findAllUsers(Page<List<User>> page) {
         try {
-            return userRepository.findAll();
+            return userRepository.findAll(page);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

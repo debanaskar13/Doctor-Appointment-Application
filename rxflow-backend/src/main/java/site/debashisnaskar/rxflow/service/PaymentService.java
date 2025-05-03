@@ -59,8 +59,8 @@ public class PaymentService {
 
             Order orderInfo = razorpayClient.orders.fetch(verifyPaymentRequest.getRazorpayOrderId());
             boolean isValid = com.razorpay.Utils.verifyPaymentSignature(new JSONObject(options), dotenv.get("RAZOR_PAY_SECRET"));
-
-            if(isValid){
+//            System.out.println(orderInfo);
+            if(isValid && orderInfo.get("status").equals("paid")){
                 UUID appointmentId = UUID.fromString(orderInfo.get("receipt"));
                 return appointmentRepository.updateAppointmentPaymentStatus(appointmentId);
             }
